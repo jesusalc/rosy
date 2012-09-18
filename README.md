@@ -1,6 +1,7 @@
 ![Rosy](http://ff0000.github.com/rosy/rosy.png?)
 
 ##### An inheritable AMD Framework.
+[![Build Status](https://secure.travis-ci.org/ff0000/rosy.png)](http://travis-ci.org/ff0000/rosy)
 
 ### Support
 
