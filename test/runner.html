@@ -30,9 +30,21 @@
 
 		<script src="../libs/modernizr.js"></script>
 
-		<style>
+		<style id="caboose">
 			#chrome-frame {
 				display: none;
+			}
+
+			#caboose {
+				-webkit-animation-duration: 0.75s;
+				-moz-animation-duration: 0.75s;
+				animation-duration: 0.75s;
+				-webkit-animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+				-moz-animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+				animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+				-webkit-animation-delay: 0.1875s;
+				-moz-animation-delay: 0.1875s;
+				animation-delay: 0.1875s;
 			}
 		</style>
 	</head>
@@ -71,6 +83,7 @@
 				"core/Timers",
 				"core/Scope",
 
+				"modules/caboose/Caboose",
 				"modules/custom-form-field/CustomFormField",
 				"modules/google-chrome-frame/ChromeFrame",
 				"modules/ios-page-control/PageControl",
