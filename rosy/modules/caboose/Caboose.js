@@ -2,10 +2,11 @@ define(
 
 	[
 		"../Module",
+		"./libs/Easings",
 		"$"
 	],
 
-	function (Module, $) {
+	function (Module, Easings, $) {
 
 		"use strict";
 
@@ -53,6 +54,7 @@ define(
 				var caboose = $("#caboose");
 
 				return {
+					easings : Easings,
 					animationDuration : this.prep(caboose.css("animation-duration")),
 					animationEasing : this.prepBezier(caboose.css("animation-timing-function")),
 					animationDelay : this.prep(caboose.css("animation-delay"))
