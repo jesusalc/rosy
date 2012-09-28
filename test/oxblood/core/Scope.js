@@ -61,6 +61,59 @@ define(
 						expect(testInstance).to.be.a(TestClass);
 					});
 
+					it("should accept data parameters via e.data", function (done) {
+						var TestClass = SubClass.extend({
+							init : function () {
+								this.setupEvents();
+							},
+
+							setupEvents : function () {
+								var body = $("body");
+
+								body.on({
+									click : this.onClick,
+									scroll : this.onScroll
+								});
+
+								body.on("click", {
+									foo : "bar",
+									x : 1
+								}, this.testDataParams);
+
+								this.setTimeout(function () {
+									this.testScope.call(window);
+									this.testScope.apply(document);
+
+									body.trigger("click");
+									body.trigger("scroll");
+								}, 0);
+							},
+
+							testDataParams : function (e) {
+								expect(e.data).to.eql({
+									foo : "bar",
+									x : 1
+								});
+							},
+
+							testScope : function () {
+								expect(this).to.eql(testInstance);
+							},
+
+							onClick : function () {
+								expect(this).to.eql(testInstance);
+							},
+
+							onScroll : function () {
+								expect(this).to.eql(testInstance);
+								done();
+							}
+						});
+
+						var testInstance = new TestClass();
+						expect(testInstance).to.be.a(TestClass);
+					});
+
 					it("should respect autoProxy option", function (done) {
 						var TestClass = SubClass.extend({
 							opts : {
