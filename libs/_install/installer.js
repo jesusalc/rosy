@@ -38,7 +38,7 @@ console.log("");
 	}
 
 	var file = fs.createWriteStream(path.join(pluginspath || libpath, filename));
-	console.log("    " + (plugin ? "  + " : "") + "Installing %n from %u".replace("%n", curr.name.cyan).replace("%u", curr.src.grey));
+	console.log((plugin ? " + " : "") + "Installing %n from %u".replace("%n", curr.name.cyan).replace("%u", curr.src.grey));
 
 	protocol.get(options, function (res) {
 		res.on("data", function (data) {
