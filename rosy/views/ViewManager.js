@@ -260,10 +260,11 @@ define(
 					if (data.route) {
 
 						data.event = e;
+						data.eventReturn = true;
 						this._gotoRoute(data);
 
 						if (!this.bubble) {
-							return false;
+							return data.eventReturn;
 						}
 					}
 				}
@@ -315,6 +316,7 @@ define(
 
 					if (data.event) {
 						data.event.preventDefault();
+						data.eventReturn = false;
 					}
 
 					/**
