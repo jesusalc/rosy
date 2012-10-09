@@ -371,7 +371,7 @@ define(
 
 						matchedView = matchedViews[i];
 						viewGroup = matchedView.viewGroup;
-						currentView = matchedView.viewGroup.currentView;
+						currentView = matchedView.viewGroup.newView || matchedView.viewGroup.currentView;
 
 						if (viewGroup.currentRoute !== data.route) {
 
@@ -387,7 +387,6 @@ define(
 								}
 
 								if (!currentView || currentView.routeRegEx !== matchedView.regex) {
-
 									this._changeView(matchedView, data, cb);
 									didRoute = true;
 								}
