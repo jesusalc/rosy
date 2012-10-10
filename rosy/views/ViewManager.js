@@ -121,11 +121,11 @@ define(
 
 				this.container.on("click", this.selectors.join(","), this._onLinkClick);
 
-				this._gotoRoute({route : defaultRoute || window.location.pathname});
-
 				if (window.location.hash) {
 					this._gotoRoute({route : window.location.hash});
 				}
+
+				this._gotoRoute({route : defaultRoute || window.location.pathname});
 
 				this.initialized = true;
 			},
