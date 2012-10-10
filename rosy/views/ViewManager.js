@@ -121,11 +121,11 @@ define(
 
 				this.container.on("click", this.selectors.join(","), this._onLinkClick);
 
-				this._gotoRoute({route : defaultRoute || window.location.pathname});
-
 				if (window.location.hash) {
 					this._gotoRoute({route : window.location.hash});
 				}
+
+				this._gotoRoute({route : defaultRoute || window.location.pathname});
 
 				this.initialized = true;
 			},
@@ -371,7 +371,7 @@ define(
 
 						matchedView = matchedViews[i];
 						viewGroup = matchedView.viewGroup;
-						currentView = matchedView.viewGroup.currentView;
+						currentView = matchedView.viewGroup.newView || matchedView.viewGroup.currentView;
 
 						if (viewGroup.currentRoute !== data.route) {
 
@@ -387,7 +387,6 @@ define(
 								}
 
 								if (!currentView || currentView.routeRegEx !== matchedView.regex) {
-
 									this._changeView(matchedView, data, cb);
 									didRoute = true;
 								}

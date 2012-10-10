@@ -9,6 +9,8 @@ define(
 
 		"use strict";
 
+		var $body = $("body");
+
 		return View.extend({
 
 			$content : "",
@@ -19,7 +21,9 @@ define(
 
 			load : function () {
 
-				var selector = this.viewGroup.config.selector;
+				var selector = this.viewGroup.config.selector,
+					$selector = $(selector),
+					pageData;
 
 				if (this.viewGroup.currentView !== null) {
 
@@ -35,7 +39,15 @@ define(
 						this.$content = $(data).find(selector);
 						this.$content.css("opacity", "0");
 
-						$(selector).replaceWith(this.$content);
+						pageData = this.$content.data();
+
+						$selector.replaceWith(this.$content);
+
+						$body.removeAttr("class");
+						$body.addClass(pageData.bodyClass);
+
+						this.updateTitle(pageData.title);
+
 						this.loadComplete();
 					}));
 				}
@@ -46,7 +58,7 @@ define(
 				*/
 
 				else {
-					this.$content = $(selector);
+					this.$content = $selector;
 					this.loadComplete();
 				}
 			},
