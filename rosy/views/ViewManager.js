@@ -150,7 +150,14 @@ define(
 			},
 
 			closeViewGroup : function (viewGroup, cb) {
+
+				cb = typeof cb === "function" ? cb : null
+
 				TransitionManager.close((typeof viewGroup === "string") ? this.getViewGroup(viewGroup) : viewGroup, cb);
+
+				if (viewGroup.config.useHistory === "#") {
+					HASH_VALUE = window.location.hash = "";
+				}
 			},
 
 			getViewGroup : function (id) {

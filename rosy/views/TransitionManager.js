@@ -122,6 +122,7 @@ define(
 							"transitionOut" : view.__transitionOut.bind(view),
 							"cleanup" : view.__cleanup.bind(view),
 							"complete" : function () {
+								viewGroup.currentRoute = null;
 								viewGroup.currentView = null;
 								viewGroup.transitioning = false;
 
