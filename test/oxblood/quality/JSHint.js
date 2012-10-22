@@ -18,37 +18,47 @@ define(
 
 			describe("Code Quality", function () {
 
-				var test = function (script, done) {
-					$.ajax({
-						url: script,
-						dataType: "text",
-						success: function (source) {
-							var result,
-								messages = [];
+				var cache = {};
 
-							if (source !== undefined) {
-								var hint = new JSHint(source, options),
-									i, j, error;
+				var checkForErrors = function (source, done) {
+					var result,
+						messages = [];
 
-								for (i = 0, j = JSHint.errors.length; i < j; i++) {
-									error = JSHint.errors[i];
+					if (source !== undefined) {
+						var hint = new JSHint(source, options),
+							i, j, error;
 
-									if (error) {
-										messages.push("Line " + error.line + ": " + error.reason);
-									}
-								}
+						for (i = 0, j = JSHint.errors.length; i < j; i++) {
+							error = JSHint.errors[i];
+
+							if (error) {
+								messages.push("Line " + error.line + ": " + error.reason);
 							}
-
-							if (messages.length) {
-								result = new Error("\n" + messages.join("\n"));
-							}
-
-							done(result);
-						},
-						error: function () {
-							done();
 						}
-					});
+					}
+
+					if (messages.length) {
+						result = new Error("\n" + messages.join("\n"));
+					}
+
+					done(result);
+				};
+
+				var fetch = function (script, done) {
+					if (cache[script]) {
+						checkForErrors(cache[script], done);
+					} else {
+						$.ajax({
+							url: script,
+							dataType: "text",
+							success: function (source) {
+								checkForErrors(source, done);
+							},
+							error: function () {
+								done();
+							}
+						});
+					}
 				};
 
 				var getPrettyPrint = function (script) {
@@ -59,16 +69,14 @@ define(
 				};
 
 				var setupTest = function (script, excludes) {
-					var loc = window.location;
-
-					if (script.indexOf(loc.host) === -1 || excludes.test(script)) {
+					if (script.indexOf(window.location.host) === -1 || excludes.test(script)) {
 						return;
 					}
 
 					var pretty = getPrettyPrint(script);
 
 					it(pretty, function (done) {
-						test(script, done);
+						fetch(script, done);
 					});
 				};
 
@@ -80,6 +88,30 @@ define(
 					return new RegExp(lines.split("\n").join("|"));
 				};
 
+				var preloadScripts = function (scripts, excludes) {
+					var script = scripts.shift().src;
+
+					if (script.indexOf(window.location.host) === -1 || excludes.test(script)) {
+						if (scripts.length) {
+							preloadScripts(scripts, excludes);
+						}
+
+						return;
+					}
+
+					$.ajax({
+						url: script,
+						dataType: "text",
+						success: function (source) {
+							cache[script] = source;
+
+							if (scripts.length) {
+								preloadScripts(scripts, excludes);
+							}
+						}
+					});
+				};
+
 				describe("JSHint", function () {
 					var scripts = $("script[data-requiremodule]"),
 						excludes = setupExcludes(),
@@ -88,6 +120,8 @@ define(
 					for (i = 0, j = scripts.length; i < j; i++) {
 						setupTest(scripts[i].src, excludes);
 					}
+
+					preloadScripts(scripts.toArray(), excludes);
 				});
 			});
 
