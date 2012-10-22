@@ -36,7 +36,7 @@ define(
 							expect($.browser.msie).to.not.be.ok();
 						});
 					} else {
-						it ("should append #chrome-frame to DOM", function () {
+						it("should append #chrome-frame to DOM", function () {
 							expect($("#chrome-frame").length).to.be.ok();
 						});
 

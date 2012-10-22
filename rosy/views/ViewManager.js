@@ -151,7 +151,7 @@ define(
 
 			closeViewGroup : function (viewGroup, cb) {
 
-				cb = typeof cb === "function" ? cb : null
+				cb = typeof cb === "function" ? cb : null;
 
 				TransitionManager.close((typeof viewGroup === "string") ? this.getViewGroup(viewGroup) : viewGroup, cb);
 
