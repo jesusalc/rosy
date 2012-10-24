@@ -16,7 +16,7 @@ define(
 			config : {},
 			routes: [],
 
-			history : [],
+			history : null,
 			currentRoute : null,
 
 			currentView : null,
@@ -24,6 +24,7 @@ define(
 			deferredTransition : null,
 
 			init : function (obj, viewManager) {
+				this.history = [];
 				this.id = obj.config.id || null;
 				this.currentView = null;
 				this.config = obj.config;
@@ -49,8 +50,8 @@ define(
 			},
 
 			__updateRoute : function (route) {
-				this.history.push(this.currentRoute);
 				this.currentRoute = route;
+				this.history.push(this.currentRoute);
 			}
 		});
 	}
