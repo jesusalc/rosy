@@ -62,9 +62,16 @@
 				baseUrl : "/",
 				paths: {
 					"OxBlood": "test/oxblood/OxBlood",
+					"JSHint": "http://www.jshint.com/src/js/jshint",
 					"core": "test/oxblood/core",
 					"routing": "test/oxblood/routing",
-					"modules": "test/oxblood/modules"
+					"modules": "test/oxblood/modules",
+					"quality": "test/oxblood/quality"
+				},
+				shim: {
+					"JSHint": {
+						exports: "JSHINT"
+					}
 				},
 				urlArgs : "cacheBust=" + (new Date()).getTime()
 			});
@@ -93,6 +100,8 @@
 				"modules/ticker/Ticker",
 				"modules/tracking/GATracking",
 				"modules/tracking/OmnitureTracking",
+
+				"quality/JSHint",
 
 				"routing/Routing",
 				"$"

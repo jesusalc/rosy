@@ -1,6 +1,6 @@
 (function () {
 
-	/*jshint bitwise: false */
+	/*jshint node: true, bitwise: false */
 	/*global process */
 
 	"use strict";

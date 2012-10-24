@@ -151,9 +151,10 @@ define(
 
 			closeViewGroup : function (viewGroup, cb) {
 
-				cb = typeof cb === "function" ? cb : null
+				cb = typeof cb === "function" ? cb : null;
+				viewGroup = (typeof viewGroup === "string") ? this.getViewGroup(viewGroup) : viewGroup;
 
-				TransitionManager.close((typeof viewGroup === "string") ? this.getViewGroup(viewGroup) : viewGroup, cb);
+				TransitionManager.close(viewGroup, cb);
 
 				if (viewGroup.config.useHistory === "#") {
 					HASH_VALUE = window.location.hash = "";
