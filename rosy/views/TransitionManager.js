@@ -116,6 +116,8 @@ define(
 
 					if (view) {
 
+						viewGroup.transitioning = true;
+
 						transitionObj = {
 							"load" : null,
 							"transitionIn" : null,
