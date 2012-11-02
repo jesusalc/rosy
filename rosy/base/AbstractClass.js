@@ -78,10 +78,14 @@ define(
 						this.vars = Utils.extend({}, this.vars, vars);
 					}
 
-					if (this.opts && this.opts.autoProxy === true) {
-						for (p in this) {
-							if (typeof this[p] === "function") {
-								this[p] = this[p].bind(this);
+					if (this.opts) {
+						this.opts = Utils.extend({}, this.opts);
+
+						if (this.opts.autoProxy === true) {
+							for (p in this) {
+								if (typeof this[p] === "function") {
+									this[p] = this[p].bind(this);
+								}
 							}
 						}
 					}
@@ -109,7 +113,7 @@ define(
 
 						else if (props[p] !== null) {
 
-							if (p === "vars") {
+							if (p === "vars" || p === "opts") {
 								proto[p] = Utils.extend({}, true, this.prototype[p], props[p]);
 							}
 

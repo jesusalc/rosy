@@ -52,10 +52,7 @@ define(function () {
 	// Now camel case the values
 	for (var key in easings.css) {
 		var ccKey = _toCamelCase(key);
-
-		if (!(ccKey in easings.css)) {
-			easings[ccKey] = easings.css[key];
-		}
+		easings[ccKey] = easings.css[key];
 	}
 
 	return easings;

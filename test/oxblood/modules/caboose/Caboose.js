@@ -69,7 +69,7 @@ define(
 							"ease-in-out-circ":  "cubic-bezier(0.785, 0.135, 0.150, 0.860)"
 						};
 
-						for (var key in matches) {
+						var setupTest = function (key) {
 							it(key, function () {
 								var ccKey = _toCamelCase(key);
 								expect(easings[ccKey]).to.be.a("string");
@@ -78,6 +78,10 @@ define(
 								expect(easings.css[key]).to.be.a("string");
 								expect(easings.css[key]).to.equal(matches[key]);
 							});
+						};
+
+						for (var key in matches) {
+							setupTest(key);
 						}
 					});
 

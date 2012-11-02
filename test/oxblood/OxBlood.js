@@ -21,7 +21,8 @@ define(
 			tests : {
 				core : [],
 				routing : [],
-				modules : []
+				modules : [],
+				quality : []
 			},
 
 			addCoreTests : function (tests) {
@@ -34,6 +35,10 @@ define(
 
 			addModuleTests : function (tests) {
 				this.tests.modules.push(tests);
+			},
+
+			addQualityTests : function (tests) {
+				this.tests.quality.push(tests);
 			},
 
 			registerTests : function () {
