@@ -16,10 +16,12 @@
 		"union": ">=0.3.4",
 		"ecstatic": ">=0.1.6",
 		"optimist": ">=0.3.4",
-		"mocha-phantomjs": ">=1.0.1"
+		"mocha-phantomjs": ">=1.0.1",
+		"bunyip": "https://github.com/doctyper/bunyip/tarball/master"
 	},
 	"scripts": {
 		"install" : "node libs/_install/installer.js",
+		"browser": "bunyip -f test/runner.html local -l 'safari|chrome|firefox'",
 		"test": "node test/runner.js"
 	}
 }

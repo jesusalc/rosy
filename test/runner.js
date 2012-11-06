@@ -55,12 +55,12 @@
 					console.error("Are you missing PhantomJS? Install via `brew install phantomjs`");
 				}
 
-				process.exit();
+				process.exit(1);
 			});
 
-			child.addListener("exit", function () {
+			child.addListener("exit", function (code) {
 				server.close();
-				process.exit();
+				process.exit(code);
 			});
 		}
 
