@@ -24,7 +24,7 @@
 
 	var host = "http://%i:%p".replace("%i", ip).replace("%p", port);
 	var webpage = "%s/test/runner.html".replace("%s", host);
-	var runner = path.join(root, "test/lib/mocha/run-mocha.js");
+	var runner = path.join(root, "test/runner.html");
 
 	var server = union.createServer({
 		before : [
@@ -45,9 +45,8 @@
 				stdio: "inherit"
 			});
 		} else {
-			child = cp.spawn("phantomjs", [runner, webpage], {
-				env: null,
-				setsid: true,
+			var type = process.env.CI ? "tap" : "spec";
+			child = cp.spawn("mocha-phantomjs", ["-R", type, webpage], {
 				stdio: [0, 1, "pipe"]
 			});
 
