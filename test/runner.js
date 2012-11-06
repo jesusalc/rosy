@@ -16,7 +16,7 @@
 	var mode = argv.m || argv.mode;
 
 	var port = 8765;
-	var ip = "0.0.0.0";
+	var ip = "localhost";
 
 	var root = "./" + (argv.r || argv.root || "");
 	var autoIndex = true;
