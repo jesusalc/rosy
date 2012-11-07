@@ -154,8 +154,10 @@ define(
 
 				var p;
 
-				for (p in this.events) {
-					this.off(p);
+				for (p in this) {
+					if (p.indexOf("on_") >= 0) {
+						this.off(p.replace("on_"));
+					}
 				}
 
 				this.unsubscribe();
