@@ -17,17 +17,7 @@ define(
 				autoProxy : true
 			},
 
-			init : function () {
-
-				var i,
-					l;
-
-				if (this.events && this.events.length) {
-					for (i = 0, l = this.events.length; i < l; i ++) {
-						this["on_" + this.events[i]] = [];
-					}
-				}
-			},
+			init : function () {},
 
 			/**
 			* Subscribes to a notification.
@@ -104,13 +94,9 @@ define(
 			* Add pseudo event listener
 			*/
 			on : function (name, fn) {
-				var a = this["on_" + name];
-				if (a) {
-					a.push(fn);
-					return true;
-				}
-
-				throw new Error("Invalid event name.");
+				var a = this["on_" + name] = (this["on_" + name] || []);
+				a.push(fn);
+				return true;
 			},
 
 			/**
@@ -135,8 +121,6 @@ define(
 					}
 					return true;
 				}
-
-				throw new Error("Invalid event name.");
 			},
 
 			/**
@@ -144,9 +128,7 @@ define(
 			*/
 			trigger : function (name, args) {
 
-				var a,
-					e,
-					i;
+				var a, e, i, l;
 
 				name = name.split(":");
 
@@ -163,8 +145,6 @@ define(
 							a[i].apply(null, args);
 						}
 					}
-
-					console.log(e);
 
 					name.pop();
 				}
