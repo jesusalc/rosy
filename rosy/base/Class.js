@@ -143,16 +143,30 @@ define(
 			* Trigger pseudo event
 			*/
 			trigger : function (name, args) {
-				var a = this["on_" + name],
-					i, l;
 
-				if (a && a.length) {
+				var a,
+					e,
+					i;
 
-					args = [].concat(this, (args || []));
+				name = name.split(":");
 
-					for (i = 0, l = a.length; i < l; i ++) {
-						a[i].apply(null, args);
+				while (name.length) {
+
+					e = name.join(":");
+					a = this["on_" + e];
+
+					if (a && a.length) {
+
+						args = [].concat(e, this, (args || []));
+
+						for (i = 0, l = a.length; i < l; i ++) {
+							a[i].apply(null, args);
+						}
 					}
+
+					console.log(e);
+
+					name.pop();
 				}
 			},
 
