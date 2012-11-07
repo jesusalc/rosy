@@ -46,6 +46,9 @@ define(
 				var viewGroup = arguments.length > 1 ? arguments[0] : this,
 					cb = arguments.length > 1 ? arguments[1] : arguments[0];
 
+				this.deactivate();
+				this.__updateRoute(null);
+
 				this.viewManager.closeViewGroup(viewGroup, cb);
 			},
 
