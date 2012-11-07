@@ -63,8 +63,9 @@ define(
 			/**
 			* Publishes a notification with the specified data.
 			*/
-			publish : function (name, data, callback) {
-				NotificationManager.publish(name, data, callback, this);
+			publish : function (/*name, arg1, arg2, arg3..., callback*/) {
+				var args = Array.prototype.slice.call(arguments);
+				NotificationManager.publish.apply(NotificationManager, [].concat(args, this));
 			},
 
 			/**
