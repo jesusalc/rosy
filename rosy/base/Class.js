@@ -94,8 +94,8 @@ define(
 			* Add pseudo event listener
 			*/
 			on : function (name, fn) {
-				var a = this["on_" + name] = (this["on_" + name] || []);
-				a.push(fn);
+				var listeners = this["on_" + name] = (this["on_" + name] || []);
+				listeners.push(fn);
 				return true;
 			},
 
@@ -104,20 +104,20 @@ define(
 			*/
 			off : function (name, fn) {
 
-				var a = this["on_" + name],
+				var listeners = this["on_" + name],
 					i;
 
-				if (a) {
+				if (listeners) {
 
 					if (!fn) {
-						a = [];
+						listeners = [];
 						return true;
 					}
 
-					i = a.indexOf(fn);
+					i = listeners.indexOf(fn);
 					while (i > -1) {
-						a.splice(i, 1);
-						i = a.indexOf(fn);
+						listeners.splice(i, 1);
+						i = listeners.indexOf(fn);
 					}
 					return true;
 				}
@@ -128,21 +128,21 @@ define(
 			*/
 			trigger : function (name, args) {
 
-				var a, e, i, l;
+				var listeners, evt, i, l;
 
 				name = name.split(":");
 
 				while (name.length) {
 
-					e = name.join(":");
-					a = this["on_" + e];
+					evt = name.join(":");
+					listeners = this["on_" + evt];
 
-					if (a && a.length) {
+					if (listeners && listeners.length) {
 
-						args = [].concat(e, this, (args || []));
+						args = [].concat(evt, this, (args || []));
 
-						for (i = 0, l = a.length; i < l; i ++) {
-							a[i].apply(null, args);
+						for (i = 0, l = listeners.length; i < l; i ++) {
+							listeners[i].apply(null, args);
 						}
 					}
 
