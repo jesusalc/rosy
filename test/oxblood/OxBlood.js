@@ -13,7 +13,8 @@ define(
 		"use strict";
 
 		mocha.setup({
-			ui: "bdd",
+			setup: "bdd",
+			reporter: "html",
 			ignoreLeaks: true
 		});
 

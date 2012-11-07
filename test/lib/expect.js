@@ -459,6 +459,17 @@
 
     return this;
   };
+  /**
+   * Assert a failure.
+   *
+   * @param {String ...} custom message
+   * @api public
+   */
+  Assertion.prototype.fail = function (msg) {
+    msg = msg || "explicit failure";
+    this.assert(false, msg, msg);
+    return this;
+  };
 
   /**
    * Function bind implementation.
@@ -736,7 +747,13 @@
   };
 
   function isRegExp(re) {
-    var s = '' + re;
+    var s;
+    try {
+      s = '' + re;
+    } catch (e) {
+      return false;
+    }
+
     return re instanceof RegExp || // easy case
            // duck-type for context-switching evalcx case
            typeof(re) === 'function' &&
