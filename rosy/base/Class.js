@@ -17,7 +17,17 @@ define(
 				autoProxy : true
 			},
 
-			init : function () {},
+			init : function () {
+
+				var i,
+					l;
+
+				if (this.events && this.events.length) {
+					for (i = 0, l = this.events.length; i < l; i ++) {
+						this["on_" + this.events[i]] = [];
+					}
+				}
+			},
 
 			/**
 			* Subscribes to a notification.
@@ -90,7 +100,70 @@ define(
 				return window.setInterval(this.proxy(func), delay);
 			},
 
+			/**
+			* Add pseudo event listener
+			*/
+			on : function (name, fn) {
+				var a = this["on_" + name];
+				if (a) {
+					a.push(fn);
+					return true;
+				}
+
+				throw new Error("Invalid event name.");
+			},
+
+			/**
+			* Remove pseudo event listener
+			*/
+			off : function (name, fn) {
+
+				var a = this["on_" + name],
+					i;
+
+				if (a) {
+
+					if (!fn) {
+						a = [];
+						return true;
+					}
+
+					i = a.indexOf(fn);
+					while (i > -1) {
+						a.splice(i, 1);
+						i = a.indexOf(fn);
+					}
+					return true;
+				}
+
+				throw new Error("Invalid event name.");
+			},
+
+			/**
+			* Trigger pseudo event
+			*/
+			trigger : function (name, args) {
+				var a = this["on_" + name],
+					i, l;
+
+				if (a && a.length) {
+
+					args = [].concat(this, (args || []));
+
+					for (i = 0, l = a.length; i < l; i ++) {
+						a[i].apply(null, args);
+					}
+				}
+			},
+
 			destroy : function () {
+
+				var p;
+
+				for (p in this.events) {
+					this.off(p);
+				}
+
 				this.unsubscribe();
 			}
 		});
