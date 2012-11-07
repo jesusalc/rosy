@@ -1,7 +1,7 @@
 {
 	"name": "rosy",
 	"description": "An inheritable AMD Framework.",
-	"version": "2.0.9",
+	"version": "2.0.10",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ff0000/rosy.git"
@@ -15,7 +15,8 @@
 		"mocha": ">=1.6.x",
 		"union": ">=0.3.4",
 		"ecstatic": ">=0.1.6",
-		"optimist": ">=0.3.4"
+		"optimist": ">=0.3.4",
+		"mocha-phantomjs": ">=1.0.1"
 	},
 	"scripts": {
 		"install" : "node libs/_install/installer.js",

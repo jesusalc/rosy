@@ -109,9 +109,13 @@
 			], function (OxBlood) {
 				OxBlood.registerTests();
 
-				if (!(/PhantomJS/).test(window.navigator.userAgent)) {
-					$(mocha.run);
-				}
+				$(document).ready(function () {
+					if (window.mochaPhantomJS) {
+						mochaPhantomJS.run();
+					} else {
+						mocha.run();
+					}
+				});
 			});
 
 		</script>

@@ -340,7 +340,7 @@ define(
 
 						if (matchedView.viewGroup.currentRoute !== data.route) {
 
-							if (currentView) {
+							if (currentView && !viewGroup.transitioning) {
 
 								if (currentView.routeRegEx === matchedView.regex) {
 									if (currentView.__update(matchedView.params, data) === false) {
