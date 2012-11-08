@@ -17,17 +17,7 @@ define(
 				autoProxy : true
 			},
 
-			init : function () {
-
-				var i,
-					l;
-
-				if (this.events && this.events.length) {
-					for (i = 0, l = this.events.length; i < l; i ++) {
-						this["on_" + this.events[i]] = [];
-					}
-				}
-			},
+			init : function () {},
 
 			/**
 			* Subscribes to a notification.
@@ -104,13 +94,9 @@ define(
 			* Add pseudo event listener
 			*/
 			on : function (name, fn) {
-				var a = this["on_" + name];
-				if (a) {
-					a.push(fn);
-					return true;
-				}
-
-				throw new Error("Invalid event name.");
+				var listeners = this["on_" + name] = (this["on_" + name] || []);
+				listeners.push(fn);
+				return true;
 			},
 
 			/**
@@ -118,41 +104,49 @@ define(
 			*/
 			off : function (name, fn) {
 
-				var a = this["on_" + name],
+				var listeners = this["on_" + name],
 					i;
 
-				if (a) {
+				if (listeners) {
 
 					if (!fn) {
-						a = [];
+						this["on_" + name] = [];
 						return true;
 					}
 
-					i = a.indexOf(fn);
+					i = listeners.indexOf(fn);
 					while (i > -1) {
-						a.splice(i, 1);
-						i = a.indexOf(fn);
+						listeners.splice(i, 1);
+						i = listeners.indexOf(fn);
 					}
 					return true;
 				}
-
-				throw new Error("Invalid event name.");
 			},
 
 			/**
 			* Trigger pseudo event
 			*/
 			trigger : function (name, args) {
-				var a = this["on_" + name],
-					i, l;
 
-				if (a && a.length) {
+				var listeners, evt, i, l;
 
-					args = [].concat(this, (args || []));
+				name = name.split(":");
 
-					for (i = 0, l = a.length; i < l; i ++) {
-						a[i].apply(null, args);
+				while (name.length) {
+
+					evt = name.join(":");
+					listeners = this["on_" + evt];
+
+					if (listeners && listeners.length) {
+
+						args = [].concat(evt, this, (args || []));
+
+						for (i = 0, l = listeners.length; i < l; i ++) {
+							listeners[i].apply(null, args);
+						}
 					}
+
+					name.pop();
 				}
 			},
 
@@ -160,8 +154,10 @@ define(
 
 				var p;
 
-				for (p in this.events) {
-					this.off(p);
+				for (p in this) {
+					if (p.indexOf("on_") >= 0) {
+						this.off(p.replace("on_"));
+					}
 				}
 
 				this.unsubscribe();

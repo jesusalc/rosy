@@ -3,8 +3,8 @@ define(
 	[
 		"OxBlood",
 		"JSHint",
-		"jsonFile!/.jshintrc",
-		"text!/.jshintignore",
+		"jsonFile!../../../.jshintrc",
+		"text!../../../.jshintignore",
 		"$"
 	],
 

@@ -3,7 +3,8 @@ define(
 	[
 		"test/lib/trim",
 		"test/lib/expect",
-		"test/lib/mocha/mocha"
+		"test/lib/mocha/mocha",
+		"test/lib/mocha/mocha-yeti-adaptor"
 	],
 
 	function () {
