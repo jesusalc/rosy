@@ -85,6 +85,20 @@ define(
 							});
 						});
 
+						it("should publish a notification with multiple arguments", function (done) {
+
+							testInstance.subscribe("pub-args-test", function (notification, arg1, arg2, arg3) {
+								expect(arg1).to.eql(1);
+								expect(arg2).to.eql(2);
+								expect(arg3).to.eql("z");
+								expect(notification.dispatcher).to.eql(testInstance);
+								done();
+							});
+
+							testInstance.publish("pub-args-test", 1, 2, "z");
+						});
+
+
 					});
 
 					describe(".hold()", function () {

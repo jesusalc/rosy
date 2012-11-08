@@ -1,16 +1,18 @@
 define(
 
 	[
+		"../utils/Utils",
 		"../polyfills/array-indexof"
 	],
 
-	function () {
+	function (Utils) {
 
 		"use strict";
 
-		var Notification = function (name, data, callback) {
+		var Notification = function (name, args, callback) {
 			this.name = name;
-			this.data = data;
+			this.args = args;
+			this.data = args && args.length === 1 ? args[0] : null;
 			this.callback = callback;
 			return this;
 		};
@@ -76,7 +78,7 @@ define(
 
 				while (notification.pointer < len) {
 					if (notification.status === 1) {
-						subs[notification.pointer](notification);
+						subs[notification.pointer].apply(null, [].concat(notification, notification.args));
 						notification.pointer ++;
 					} else {
 						return;
@@ -116,8 +118,19 @@ define(
 			}
 		};
 
-		NotificationManager.publish = function (name, data, callback, dispatcher) {
-			var notification = new Notification(name, data, callback);
+		NotificationManager.publish = function () {
+
+			var notification,
+				args = Array.prototype.slice.call(arguments),
+				name = args[0],
+				dispatcher = args[args.length - 1],
+				callback = args[args.length - 2];
+
+			callback = Utils.isFunction(callback) ? callback : null;
+
+			args = args.slice(1, (callback ? args.length - 2 : args.length - 1));
+
+			notification = new Notification(name, args, callback);
 			notification.status = 1;
 			notification.pointer = 0;
 			notification.dispatcher = dispatcher;
