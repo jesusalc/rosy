@@ -110,7 +110,7 @@ define(
 				if (listeners) {
 
 					if (!fn) {
-						listeners = [];
+						this["on_" + name] = [];
 						return true;
 					}
 
