@@ -59,7 +59,10 @@
 		<script src="../config.js"></script>
 		<script>
 			require.config({
-				baseUrl : "/",
+				baseUrl : (function () {
+					var path = window.location.pathname;
+					return path.replace("test/runner.html", "");
+				}()),
 				paths: {
 					"OxBlood": "test/oxblood/OxBlood",
 					"JSHint": "http://www.jshint.com/src/js/jshint",
@@ -113,7 +116,8 @@
 					if (window.mochaPhantomJS) {
 						mochaPhantomJS.run();
 					} else {
-						mocha.run();
+						var runner = mocha.run();
+						BUNYIP.hookup(runner);
 					}
 				});
 			});
