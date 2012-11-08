@@ -35,7 +35,6 @@ Rosy is [verified to work](https://github.com/ff0000/rosy/wiki/Unit-Tests) in th
 	</tr>
 </table>
 
-
 ### Documentation
 
 For documentation and implementation details, check out the [wiki.](https://github.com/ff0000/rosy/wiki)
