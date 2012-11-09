@@ -73,8 +73,6 @@ define(
 						it("should trigger an event with args", function (done) {
 							testInstance.on("trigger-args-test", function (e, instance, arg1, arg2) {
 
-								console.log(arguments);
-
 								expect(e).to.eql("trigger-args-test");
 								expect(instance).to.eql(testInstance);
 								expect(arg1).to.eql("a");
