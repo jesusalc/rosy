@@ -3,7 +3,8 @@ define(
 	[
 		"test/lib/trim",
 		"test/lib/expect",
-		"test/lib/mocha/mocha"
+		"test/lib/mocha/mocha",
+		"test/lib/mocha/mocha-yeti-adaptor"
 	],
 
 	function () {
@@ -13,7 +14,8 @@ define(
 		"use strict";
 
 		mocha.setup({
-			ui: "bdd",
+			setup: "bdd",
+			reporter: "html",
 			ignoreLeaks: true
 		});
 

@@ -1,7 +1,7 @@
 {
 	"name": "rosy",
 	"description": "An inheritable AMD Framework.",
-	"version": "2.0.8",
+	"version": "2.1.1",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ff0000/rosy.git"
@@ -15,10 +15,13 @@
 		"mocha": ">=1.6.x",
 		"union": ">=0.3.4",
 		"ecstatic": ">=0.1.6",
-		"optimist": ">=0.3.4"
+		"optimist": ">=0.3.4",
+		"mocha-phantomjs": ">=1.0.1",
+		"bunyip": "https://github.com/doctyper/bunyip/tarball/master"
 	},
 	"scripts": {
 		"install" : "node libs/_install/installer.js",
+		"browser": "bunyip -f test/runner.html local -l 'safari|chrome|firefox'",
 		"test": "node test/runner.js"
 	}
 }

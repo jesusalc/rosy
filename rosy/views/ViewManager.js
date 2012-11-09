@@ -340,7 +340,7 @@ define(
 
 						if (matchedView.viewGroup.currentRoute !== data.route) {
 
-							if (currentView) {
+							if (currentView && !viewGroup.transitioning) {
 
 								if (currentView.routeRegEx === matchedView.regex) {
 									if (currentView.__update(matchedView.params, data) === false) {
@@ -465,7 +465,7 @@ define(
 			_updateHistory : function (title, route, useHash) {
 
 				if (HISTORY_SUPPORTED && !useHash) {
-					history.pushState(null, title || "", route + window.location.hash);
+					history.pushState(null, title || "", route + window.location.search + window.location.hash);
 				}
 
 				else if (useHash || this.fallbackMode === "#") {

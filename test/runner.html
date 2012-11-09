@@ -4,14 +4,7 @@
 		<meta charset="utf-8" />
   		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-		<link rel="dns-prefetch" href="{{ STATIC_URL }}" />
-		<link rel="static-url" href="{{ STATIC_URL }}" />
-
-		<title>__PROJECT_TITLE__</title>
-
-		<meta name="description" content="" />
-		<meta name="author" content="" />
-
+		<title>OxBlood Unit Tests</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<link rel="stylesheet" href="lib/mocha/css/mocha.css" />
@@ -59,7 +52,10 @@
 		<script src="../config.js"></script>
 		<script>
 			require.config({
-				baseUrl : "/",
+				baseUrl : (function () {
+					var path = window.location.pathname;
+					return path.replace("test/runner.html", "");
+				}()),
 				paths: {
 					"OxBlood": "test/oxblood/OxBlood",
 					"JSHint": "http://www.jshint.com/src/js/jshint",
@@ -84,6 +80,7 @@
 
 				"core/Initialization",
 				"core/Notifications",
+				"core/PseudoEvents",
 				"core/ExternalLibs",
 				"core/Inheritance",
 				"core/Destruction",
@@ -109,9 +106,14 @@
 			], function (OxBlood) {
 				OxBlood.registerTests();
 
-				if (!(/PhantomJS/).test(window.navigator.userAgent)) {
-					$(mocha.run);
-				}
+				$(document).ready(function () {
+					if (window.mochaPhantomJS) {
+						mochaPhantomJS.run();
+					} else {
+						var runner = mocha.run();
+						BUNYIP.hookup(runner);
+					}
+				});
 			});
 
 		</script>

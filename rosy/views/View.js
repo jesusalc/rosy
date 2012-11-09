@@ -368,7 +368,7 @@ define(
 				this.data = null;
 				this.params = null;
 
-				this.viewGroup = null;
+				//this.viewGroup = null;
 				this.viewClass = null;
 
 				this._loadCB = null;

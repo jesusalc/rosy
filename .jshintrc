@@ -11,7 +11,7 @@
 	"mootools": false,
 	"dojo": false,
 	"debug": false,
-	"devel": true,
+	"devel": false,
 	"es5": true,
 	"strict": false,
 	"globalstrict": false,

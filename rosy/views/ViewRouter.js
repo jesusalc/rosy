@@ -1,10 +1,11 @@
 define(
 
 	[
-		"../base/Class"
+		"../base/Class",
+		"../utils/Utils"
 	],
 
-	function (Class) {
+	function (Class, Utils) {
 
 		"use strict";
 
@@ -16,25 +17,36 @@ define(
 
 				var i,
 					j,
+					k,
 					l,
 					l2,
+					l3,
 					view,
-					path,
-					route;
+					path;
 
 				for (l = viewGroups.length, i = l - 1; i >= 0; i --) {
-					for (l2 = viewGroups[i].routes.length, j = l2 - 1; j >= 0; j --) {
-						view = viewGroups[i].routes[j];
-						path = this._normalize(view.route);
-						route = {
-							path : path[0],
-							params: path[1],
-							viewConfig : view.config || {},
-							viewClass : view.viewClass,
-							viewGroup : viewGroups[i]
-						};
 
-						this._routes.push(route);
+					for (l2 = viewGroups[i].routes.length, j = l2 - 1; j >= 0; j --) {
+
+						view = viewGroups[i].routes[j];
+						view.routes = view.routes || [];
+
+						if (view.route) {
+							view.routes.push(view.route);
+						}
+
+						for (l3 = view.routes.length, k = l3 - 1; k >= 0; k --) {
+
+							path = this._normalize(view.routes[k]);
+
+							this._routes.push({
+								path : path[0],
+								params: path[1],
+								viewConfig : view.config || {},
+								viewClass : view.viewClass,
+								viewGroup : viewGroups[i]
+							});
+						}
 					}
 				}
 			},
