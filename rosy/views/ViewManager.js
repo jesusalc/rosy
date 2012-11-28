@@ -126,7 +126,7 @@ define(
 					this._gotoRoute({route : HASH_VALUE, hashOnly : true});
 				}
 
-				this._gotoRoute({route : defaultRoute || window.location.pathname});
+				this._gotoRoute({route : defaultRoute || window.location.pathname, updateHistory : false});
 
 				this.initialized = true;
 			},
