@@ -123,7 +123,7 @@ define(
 				this.container.on(this.clickEvents.join(" "), this.selectors.join(","), this._onLinkClick);
 
 				if (HASH_VALUE) {
-					this._gotoRoute({route : HASH_VALUE});
+					this._gotoRoute({route : HASH_VALUE, hashOnly : true});
 				}
 
 				this._gotoRoute({route : defaultRoute || window.location.pathname});
@@ -176,6 +176,7 @@ define(
 						return viewGroup;
 					}
 				}
+
 				return false;
 			},
 
@@ -289,8 +290,9 @@ define(
 				var hash = this._getHash();
 
 				if (hash !== HASH_VALUE) {
-					HASH_VALUE = hash;
-					this._gotoRoute({route : HASH_VALUE}, null, true);
+
+					this._setHashValue();
+					this._gotoRoute({route : HASH_VALUE, hashOnly : true}, null, true);
 				}
 			},
 
@@ -299,6 +301,7 @@ define(
 			},
 
 			_gotoRoute : function (data) {
+
 				var i,
 					l,
 					cb,
@@ -309,6 +312,19 @@ define(
 					currentView,
 					viewData,
 					didRoute = false;
+
+				// If data.route is null and data.hashOnly is set to true, then
+				// this should signify we want to close all view groups that
+				// have useHistory = "#"
+				if (!data.route && data.hashOnly) {
+
+					for (i = 0, l = this._viewGroups.length; i < l; i ++) {
+						viewGroup = this._viewGroups[i];
+						if (viewGroup.config.useHistory === "#") {
+							this.closeViewGroup(viewGroup);
+						}
+					}
+				}
 
 				// Force all routes to begin with a "/" and have no hashtag
 				data.route = data.route.replace("#", "");
@@ -390,7 +406,7 @@ define(
 
 							this.deactivate(viewGroup.currentRoute);
 
-							if ((!data.viewGroup || viewGroup.id === data.viewGroup)) {
+							if ((!data.hashOnly || data.hashOnly && viewGroup.config.useHistory === "#") && (!data.viewGroup || viewGroup.id === data.viewGroup)) {
 
 								viewGroup.__updateRoute(data.route);
 
