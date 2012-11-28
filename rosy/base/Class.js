@@ -126,11 +126,14 @@ define(
 			/**
 			* Trigger pseudo event
 			*/
-			trigger : function (name, args) {
+			trigger : function () {
 
-				var listeners, evt, i, l;
-
-				name = name.split(":");
+				var listeners,
+					evt,
+					i,
+					l,
+					args = Array.prototype.slice.call(arguments),
+					name = args.splice(0, 1)[0].split(":");
 
 				while (name.length) {
 
