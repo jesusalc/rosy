@@ -2,7 +2,7 @@ define(
 
 	[
 		"OxBlood",
-		"rosy/models/Model",
+		"rosy/base/Model",
 	],
 
 	function (OxBlood, Model) {
