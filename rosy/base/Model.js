@@ -17,7 +17,7 @@ define(
 				this.__data = {};
 				this.defaults = this.defaults || {};
 				this.reset(false);
-				this.set(input, true);
+				this.set(input, false);
 			},
 
 			set : function (key, val, trigger) {
