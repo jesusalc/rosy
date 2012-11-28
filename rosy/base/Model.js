@@ -14,21 +14,22 @@ define(
 
 			init : function (input) {
 				this.__data = {};
-
 				this.set(input);
 			},
 
-			set : function (key, val) {
+			set : function (key, val, trigger) {
 				var i;
 
 				if (typeof key === "string") {
 					if (this.__data[key] !== val) {
 						this.__data[key] = val;
-						this.trigger('change:' + key);
+						if (trigger !== false) {
+							this.trigger('change:' + key);
+						}
 					}
 				} else {
 					for (i in key) {
-						this.set(i, key[i]);
+						this.set(i, key[i], val);
 					}
 				}
 			},
