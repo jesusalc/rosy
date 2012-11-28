@@ -19,7 +19,6 @@ define(
 
 		var HISTORY_SUPPORTED = window.history && window.history.pushState,
 			HASH_VALUE,
-			PATH_VALUE,
 			ERROR_HANDLER = function (e) { throw e; };
 
 		var ViewManager = Class.extend({
@@ -112,7 +111,6 @@ define(
 				this._setHashValue();
 
 				if (HISTORY_SUPPORTED) {
-					PATH_VALUE = window.location.pathname;
 					window.addEventListener('popstate', this._onStateChange);
 				}
 
@@ -297,11 +295,7 @@ define(
 			},
 
 			_onStateChange : function () {
-				if (window.location.pathname !== PATH_VALUE) {
-					PATH_VALUE = window.location.pathname;
-					this._gotoRoute({route : window.location.pathname, updateHistory : false});
-					return;
-				}
+				this._gotoRoute({route : window.location.pathname || "/", updateHistory : false});
 			},
 
 			_gotoRoute : function (data) {
