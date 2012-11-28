@@ -40,6 +40,7 @@ define(
 			fallbackMode : "hard",
 			aliases : [],
 			selectors : ["[data-route]", "a[href^='#']", "a[href^='/']"],
+			clickEvents : ["click"],
 			activeClass : "active",
 			disabledClass : "disabled",
 			bubble : false,
@@ -50,9 +51,10 @@ define(
 			*	CONFIG OPTIONS:
 			*
 			*	viewGroups			:	Array
-			*	fallbackMode			:	hard|soft|hash
+			*	fallbackMode		:	hard|soft|hash
 			*	aliases				:	Array
 			*	selectors			:	Array
+			*	clickEvents			:	Array
 			*	bubble				:	true|false
 			*	container			:	String|DOMElement
 			*	defaultRoute		:	String
@@ -80,6 +82,7 @@ define(
 				this.fallbackMode	=	config.fallbackMode || this.fallbackMode;
 				this.aliases		=	config.aliases || this.aliases;
 				this.selectors		=	config.selectors || this.selectors;
+				this.clickEvents	=	config.clickEvents || this.clickEvents;
 				this.activeClass	=	config.activeClass || this.activeClass;
 				this.bubble			=	config.bubble || this.bubble;
 				this.container		=	$(config.container || document);
@@ -119,7 +122,7 @@ define(
 					}
 				}
 
-				this.container.on("click", this.selectors.join(","), this._onLinkClick);
+				this.container.on(this.clickEvents.join(" "), this.selectors.join(","), this._onLinkClick);
 
 				if (window.location.hash) {
 					this._gotoRoute({route : window.location.hash});
