@@ -4,11 +4,11 @@ define(
 		"../base/Class"
 	],
 
-	function (DOMClass) {
+	function (Class) {
 
 		"use strict";
 
-		return DOMClass.extend({
+		return Class.extend({
 
 			__data : null,
 			defaults : null,
