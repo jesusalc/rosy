@@ -272,12 +272,15 @@ define(
 
 					if (data.route) {
 
-						data.event = e;
-						data.eventReturn = true;
-						this._gotoRoute(data);
+						if (!$el.attr("href") || (HISTORY_SUPPORTED || this.fallbackMode !== "hard") || data.route.indexOf("#") > -1) {
 
-						if (!this.bubble) {
-							return data.eventReturn;
+							data.event = e;
+							data.eventReturn = true;
+							this._gotoRoute(data);
+
+							if (!this.bubble) {
+								return data.eventReturn;
+							}
 						}
 					}
 				}
