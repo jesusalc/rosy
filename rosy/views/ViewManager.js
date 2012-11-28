@@ -147,7 +147,7 @@ define(
 			updateTitle : function (title) {
 
 				if (HISTORY_SUPPORTED) {
-					history.replaceState(null, title, window.location.href + "#" + this._getHash());
+					history.replaceState(null, title, window.location.href);
 				}
 
 				document.title = title;
@@ -475,9 +475,9 @@ define(
 
 			_updateHistory : function (title, route, useHash) {
 
-				var url = route + window.location.search + "#" + HASH_VALUE;
+				var url = route + window.location.search + (HASH_VALUE ? "#" + HASH_VALUE : "");
 
-				if (HISTORY_SUPPORTED && !useHash && url !== window.location.pathname) {
+				if (HISTORY_SUPPORTED && !useHash && url !== window.location.href) {
 					history.pushState(null, title || "", url);
 				}
 
