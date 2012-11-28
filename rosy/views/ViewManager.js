@@ -109,6 +109,7 @@ define(
 				}
 
 				this._router = new ViewRouter(this._viewGroups);
+				this._setHashValue();
 
 				if (HISTORY_SUPPORTED) {
 					PATH_VALUE = window.location.pathname;
@@ -117,15 +118,14 @@ define(
 
 				else {
 					if (this.fallbackMode === "#") {
-						HASH_VALUE = window.location.hash;
 						this._pollInterval = this.setInterval(this._pollForHashChange, 100);
 					}
 				}
 
 				this.container.on(this.clickEvents.join(" "), this.selectors.join(","), this._onLinkClick);
 
-				if (window.location.hash) {
-					this._gotoRoute({route : window.location.hash});
+				if (HASH_VALUE) {
+					this._gotoRoute({route : HASH_VALUE});
 				}
 
 				this._gotoRoute({route : defaultRoute || window.location.pathname});
@@ -145,9 +145,11 @@ define(
 			},
 
 			updateTitle : function (title) {
+
 				if (HISTORY_SUPPORTED) {
-					history.replaceState(null, title, window.location.href + window.location.hash);
+					history.replaceState(null, title, window.location.href + "#" + this._getHash());
 				}
+
 				document.title = title;
 				this.publish(ViewNotification.TITLE_CHANGED, {title : title});
 			},
@@ -160,7 +162,7 @@ define(
 				TransitionManager.close(viewGroup, cb);
 
 				if (viewGroup.config.useHistory === "#") {
-					HASH_VALUE = window.location.hash = "";
+					 this._setHashValue("");
 				}
 			},
 
@@ -282,8 +284,11 @@ define(
 			},
 
 			_pollForHashChange : function () {
-				if (window.location.hash !== HASH_VALUE) {
-					HASH_VALUE = window.location.hash;
+
+				var hash = this.$_getHash();
+
+				if (hash !== HASH_VALUE) {
+					HASH_VALUE = hash;
 					this._gotoRoute({route : HASH_VALUE}, null, true);
 				}
 			},
@@ -467,18 +472,20 @@ define(
 
 			_updateHistory : function (title, route, useHash) {
 
-				if (HISTORY_SUPPORTED && !useHash) {
-					history.pushState(null, title || "", route + window.location.search + window.location.hash);
+				var url = route + window.location.search + "#" + HASH_VALUE;
+
+				if (HISTORY_SUPPORTED && !useHash && url !== window.location.pathname) {
+					history.pushState(null, title || "", url);
 				}
 
 				else if (useHash || this.fallbackMode === "#") {
 
 					if (!this._pollInterval) {
-						HASH_VALUE = HASH_VALUE || window.location.hash;
+						HASH_VALUE = HASH_VALUE || this._getHash();
 						this._pollInterval = this.setInterval(this._pollForHashChange, 100);
 					}
 
-					window.location.hash = route;
+					this._setHashValue(route);
 				}
 			},
 
@@ -500,6 +507,22 @@ define(
 				}
 
 				return true;
+			},
+
+			_getHash : function () {
+				return window.location.hash.replace("#", "");
+			},
+
+			_setHashValue : function (val) {
+
+				if (typeof val !== "undefined") {
+					HASH_VALUE = val;
+					window.location.hash = val;
+				}
+
+				else {
+					HASH_VALUE = window.location.hash.replace("#", "");
+				}
 			}
 		});
 
