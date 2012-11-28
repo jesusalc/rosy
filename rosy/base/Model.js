@@ -11,10 +11,13 @@ define(
 		return DOMClass.extend({
 
 			__data : null,
+			defaults : null,
 
 			init : function (input) {
 				this.__data = {};
-				this.set(input);
+				this.defaults = this.defaults || {};
+				this.reset(false);
+				this.set(input, true);
 			},
 
 			set : function (key, val, trigger) {
@@ -48,6 +51,14 @@ define(
 				}
 
 				return output;
+			},
+
+			reset : function (trigger) {
+				var p;
+
+				for (p in this.defaults) {
+					this.set(p, this.defaults[p], trigger);
+				}
 			},
 
 			keys : function () {
