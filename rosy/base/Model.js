@@ -27,7 +27,7 @@ define(
 					if (this.__data[key] !== val) {
 						this.__data[key] = val;
 						if (trigger !== false) {
-							this.trigger('change:' + key);
+							this.trigger('change:' + key, key, val);
 						}
 					}
 				} else {
