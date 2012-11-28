@@ -162,7 +162,7 @@ define(
 				TransitionManager.close(viewGroup, cb);
 
 				if (viewGroup.config.useHistory === "#") {
-					 this._setHashValue("");
+					this._setHashValue("");
 				}
 			},
 
@@ -288,7 +288,7 @@ define(
 
 			_pollForHashChange : function () {
 
-				var hash = this.$_getHash();
+				var hash = this._getHash();
 
 				if (hash !== HASH_VALUE) {
 					HASH_VALUE = hash;
