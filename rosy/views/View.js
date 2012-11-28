@@ -368,9 +368,6 @@ define(
 				this.data = null;
 				this.params = null;
 
-				//this.viewGroup = null;
-				this.viewClass = null;
-
 				this._loadCB = null;
 				this._inCB = null;
 				this._outCB = null;
