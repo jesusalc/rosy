@@ -19,7 +19,6 @@ define(
 
 		var HISTORY_SUPPORTED = window.history && window.history.pushState,
 			HASH_VALUE,
-			PATH_VALUE,
 			ERROR_HANDLER = function (e) { throw e; };
 
 		var ViewManager = Class.extend({
@@ -40,6 +39,7 @@ define(
 			fallbackMode : "hard",
 			aliases : [],
 			selectors : ["[data-route]", "a[href^='#']", "a[href^='/']"],
+			clickEvents : ["click"],
 			activeClass : "active",
 			disabledClass : "disabled",
 			bubble : false,
@@ -50,9 +50,10 @@ define(
 			*	CONFIG OPTIONS:
 			*
 			*	viewGroups			:	Array
-			*	fallbackMode			:	hard|soft|hash
+			*	fallbackMode		:	hard|soft|hash
 			*	aliases				:	Array
 			*	selectors			:	Array
+			*	clickEvents			:	Array
 			*	bubble				:	true|false
 			*	container			:	String|DOMElement
 			*	defaultRoute		:	String
@@ -80,6 +81,7 @@ define(
 				this.fallbackMode	=	config.fallbackMode || this.fallbackMode;
 				this.aliases		=	config.aliases || this.aliases;
 				this.selectors		=	config.selectors || this.selectors;
+				this.clickEvents	=	config.clickEvents || this.clickEvents;
 				this.activeClass	=	config.activeClass || this.activeClass;
 				this.bubble			=	config.bubble || this.bubble;
 				this.container		=	$(config.container || document);
@@ -106,26 +108,25 @@ define(
 				}
 
 				this._router = new ViewRouter(this._viewGroups);
+				this._setHashValue();
 
 				if (HISTORY_SUPPORTED) {
-					PATH_VALUE = window.location.pathname;
 					window.addEventListener('popstate', this._onStateChange);
 				}
 
 				else {
 					if (this.fallbackMode === "#") {
-						HASH_VALUE = window.location.hash;
 						this._pollInterval = this.setInterval(this._pollForHashChange, 100);
 					}
 				}
 
-				this.container.on("click", this.selectors.join(","), this._onLinkClick);
+				this.container.on(this.clickEvents.join(" "), this.selectors.join(","), this._onLinkClick);
 
-				if (window.location.hash) {
-					this._gotoRoute({route : window.location.hash});
+				if (HASH_VALUE) {
+					this._gotoRoute({route : HASH_VALUE, hashOnly : true});
 				}
 
-				this._gotoRoute({route : defaultRoute || window.location.pathname});
+				this._gotoRoute({route : defaultRoute || window.location.pathname, updateHistory : false});
 
 				this.initialized = true;
 			},
@@ -142,9 +143,11 @@ define(
 			},
 
 			updateTitle : function (title) {
+
 				if (HISTORY_SUPPORTED) {
-					history.replaceState(null, title, window.location.href + window.location.hash);
+					history.replaceState(null, title, window.location.href);
 				}
+
 				document.title = title;
 				this.publish(ViewNotification.TITLE_CHANGED, {title : title});
 			},
@@ -157,7 +160,7 @@ define(
 				TransitionManager.close(viewGroup, cb);
 
 				if (viewGroup.config.useHistory === "#") {
-					HASH_VALUE = window.location.hash = "";
+					this._setHashValue("");
 				}
 			},
 
@@ -173,6 +176,7 @@ define(
 						return viewGroup;
 					}
 				}
+
 				return false;
 			},
 
@@ -267,33 +271,37 @@ define(
 
 					if (data.route) {
 
-						data.event = e;
-						data.eventReturn = true;
-						this._gotoRoute(data);
+						if (!$el.attr("href") || (HISTORY_SUPPORTED || this.fallbackMode !== "hard") || data.route.indexOf("#") > -1) {
 
-						if (!this.bubble) {
-							return data.eventReturn;
+							data.event = e;
+							data.eventReturn = true;
+							this._gotoRoute(data);
+
+							if (!this.bubble) {
+								return data.eventReturn;
+							}
 						}
 					}
 				}
 			},
 
 			_pollForHashChange : function () {
-				if (window.location.hash !== HASH_VALUE) {
-					HASH_VALUE = window.location.hash;
-					this._gotoRoute({route : HASH_VALUE}, null, true);
+
+				var hash = this._getHash();
+
+				if (hash !== HASH_VALUE) {
+
+					this._setHashValue();
+					this._gotoRoute({route : HASH_VALUE, hashOnly : true}, null, true);
 				}
 			},
 
 			_onStateChange : function () {
-				if (window.location.pathname !== PATH_VALUE) {
-					PATH_VALUE = window.location.pathname;
-					this._gotoRoute({route : window.location.pathname, updateHistory : false});
-					return;
-				}
+				this._gotoRoute({route : window.location.pathname || "/", updateHistory : false});
 			},
 
 			_gotoRoute : function (data) {
+
 				var i,
 					l,
 					cb,
@@ -304,6 +312,19 @@ define(
 					currentView,
 					viewData,
 					didRoute = false;
+
+				// If data.route is null and data.hashOnly is set to true, then
+				// this should signify we want to close all view groups that
+				// have useHistory = "#"
+				if (!data.route && data.hashOnly) {
+
+					for (i = 0, l = this._viewGroups.length; i < l; i ++) {
+						viewGroup = this._viewGroups[i];
+						if (viewGroup.config.useHistory === "#") {
+							this.closeViewGroup(viewGroup);
+						}
+					}
+				}
 
 				// Force all routes to begin with a "/" and have no hashtag
 				data.route = data.route.replace("#", "");
@@ -385,7 +406,7 @@ define(
 
 							this.deactivate(viewGroup.currentRoute);
 
-							if ((!data.viewGroup || viewGroup.id === data.viewGroup)) {
+							if ((!data.hashOnly || data.hashOnly && viewGroup.config.useHistory === "#") && (!data.viewGroup || viewGroup.id === data.viewGroup)) {
 
 								viewGroup.__updateRoute(data.route);
 
@@ -464,18 +485,20 @@ define(
 
 			_updateHistory : function (title, route, useHash) {
 
-				if (HISTORY_SUPPORTED && !useHash) {
-					history.pushState(null, title || "", route + window.location.search + window.location.hash);
+				var url = route + window.location.search + (HASH_VALUE ? "#" + HASH_VALUE : "");
+
+				if (HISTORY_SUPPORTED && !useHash && url !== window.location.href) {
+					history.pushState(null, title || "", url);
 				}
 
 				else if (useHash || this.fallbackMode === "#") {
 
 					if (!this._pollInterval) {
-						HASH_VALUE = HASH_VALUE || window.location.hash;
+						HASH_VALUE = HASH_VALUE || this._getHash();
 						this._pollInterval = this.setInterval(this._pollForHashChange, 100);
 					}
 
-					window.location.hash = route;
+					this._setHashValue(route);
 				}
 			},
 
@@ -497,6 +520,30 @@ define(
 				}
 
 				return true;
+			},
+
+			_getHash : function () {
+				return window.location.hash.replace("#", "");
+			},
+
+			_setHashValue : function (val) {
+
+				var hash;
+
+				if (typeof val !== "undefined") {
+
+					HASH_VALUE = val;
+
+					hash = this._getHash();
+
+					if (hash || val && hash !== val) {
+						window.location.hash = val;
+					}
+				}
+
+				else {
+					HASH_VALUE = window.location.hash.replace("#", "");
+				}
 			}
 		});
 

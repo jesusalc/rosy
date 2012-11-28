@@ -73,7 +73,6 @@ define(
 				_gaq.push(["_setDomainName", this.vars.domain]);
 				_gaq.push(["_setAllowLinker", true]);
 				_gaq.push(["_trackPageview"]);
-				_gaq.push(["_trackPageLoadTime"]);
 
 				(function (d, t) {
 					var g = d.createElement(t),
