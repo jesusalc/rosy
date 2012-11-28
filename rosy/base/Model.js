@@ -70,6 +70,23 @@ define(
 				}
 
 				return output;
+			},
+
+			validate : function () {
+
+				var p,
+					valid = true;
+
+				for (p in this.__data) {
+
+					if (this["validate_" + p]) {
+						if (!this["validate_" + p](this.__data[p])) {
+							valid = false;
+						}
+					}
+				}
+
+				return valid;
 			}
 		});
 	}
