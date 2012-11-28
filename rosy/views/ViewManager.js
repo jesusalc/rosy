@@ -512,9 +512,17 @@ define(
 
 			_setHashValue : function (val) {
 
+				var hash;
+
 				if (typeof val !== "undefined") {
+
 					HASH_VALUE = val;
-					window.location.hash = val;
+
+					hash = this._getHash();
+
+					if (hash || val && hash !== val) {
+						window.location.hash = val;
+					}
 				}
 
 				else {
