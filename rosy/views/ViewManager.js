@@ -126,7 +126,7 @@ define(
 					this._gotoRoute({route : HASH_VALUE, hashOnly : true});
 				}
 
-				this._gotoRoute({route : defaultRoute || window.location.pathname, updateHistory : false});
+				this._gotoRoute({route : defaultRoute || window.location.pathname + window.location.search, updateHistory : false});
 
 				this.initialized = true;
 			},
@@ -485,7 +485,7 @@ define(
 
 			_updateHistory : function (title, route, useHash) {
 
-				var url = route + window.location.search + (HASH_VALUE ? "#" + HASH_VALUE : "");
+				var url = route + (HASH_VALUE ? "#" + HASH_VALUE : "");
 
 				if (HISTORY_SUPPORTED && !useHash && url !== window.location.href) {
 					history.pushState(null, title || "", url);
