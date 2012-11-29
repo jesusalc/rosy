@@ -29,7 +29,7 @@ define(
 					for (func in instance) {
 						f = instance[func];
 
-						if (f.guid && typeof f === "function") {
+						if (f && f.guid && typeof f === "function") {
 							if (f.guid === event.handler.guid) {
 								jqObj.off(type, f);
 							}
