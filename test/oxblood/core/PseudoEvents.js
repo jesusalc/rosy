@@ -81,7 +81,7 @@ define(
 								done();
 							});
 
-							testInstance.trigger("trigger-args-test", ["a", "b"]);
+							testInstance.trigger("trigger-args-test", "a", "b");
 						});
 
 					});

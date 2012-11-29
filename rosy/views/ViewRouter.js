@@ -72,9 +72,11 @@ define(
 
 						params = {};
 
-						for (j = 1, l2 = m.length; j < l2; j ++) {
-							param = r.params[j - 1];
-							params[param.name] = m[j] || null;
+						if (r.params && r.params.length) {
+							for (j = 1, l2 = m.length; j < l2; j ++) {
+								param = r.params[j - 1];
+								params[param.name] = m[j] || null;
+							}
 						}
 
 						views.push({
