@@ -297,7 +297,7 @@ define(
 			},
 
 			_onStateChange : function () {
-				this._gotoRoute({route : window.location.pathname || "/", updateHistory : false});
+				this._gotoRoute({route : (window.location.pathname + window.location.search) || "/", updateHistory : false});
 			},
 
 			_gotoRoute : function (data) {
