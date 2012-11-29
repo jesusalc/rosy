@@ -136,6 +136,12 @@ define(
 
 						this._nextInSequence(0, "reverse", transitionObj);
 					}
+
+					else {
+						if (cb) {
+							cb();
+						}
+					}
 				}
 				else {
 					throw new Error("Invalid view group.");
