@@ -39,6 +39,7 @@ define(
 			fallbackMode : "hard",
 			aliases : [],
 			selectors : ["[data-route]", "a[href^='#']", "a[href^='/']"],
+			hijackLinks : true,
 			clickEvents : ["click"],
 			activeClass : "active",
 			disabledClass : "disabled",
@@ -53,6 +54,7 @@ define(
 			*	fallbackMode		:	hard|soft|hash
 			*	aliases				:	Array
 			*	selectors			:	Array
+			*	hijackLinks			:	Boolean
 			*	clickEvents			:	Array
 			*	bubble				:	true|false
 			*	container			:	String|DOMElement
@@ -81,6 +83,7 @@ define(
 				this.fallbackMode	=	config.fallbackMode || this.fallbackMode;
 				this.aliases		=	config.aliases || this.aliases;
 				this.selectors		=	config.selectors || this.selectors;
+				this.hijackLinks	=	config.hijackLinks || this.hijackLinks;
 				this.clickEvents	=	config.clickEvents || this.clickEvents;
 				this.activeClass	=	config.activeClass || this.activeClass;
 				this.bubble			=	config.bubble || this.bubble;
@@ -120,7 +123,9 @@ define(
 					}
 				}
 
-				this.container.on(this.clickEvents.join(" "), this.selectors.join(","), this._onLinkClick);
+				if (this.hijackLinks) {
+					this.container.on(this.clickEvents.join(" "), this.selectors.join(","), this._onLinkClick);
+				}
 
 				if (HASH_VALUE) {
 					this._gotoRoute({route : HASH_VALUE, hashOnly : true});
