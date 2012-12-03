@@ -30,7 +30,10 @@ define(
 							this.trigger('change:' + key, key, val);
 						}
 					}
-				} else {
+					return val;
+				}
+
+				else {
 					for (i in key) {
 						this.set(i, key[i], val);
 					}
