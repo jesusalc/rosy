@@ -44,6 +44,9 @@ define(
 				var i, output;
 
 				if (key) {
+					if (this['get_' + key]) {
+						return this['get_' + key]();
+					}
 					return this.__data[key];
 				}
 
