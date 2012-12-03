@@ -24,12 +24,26 @@ define(
 				var i;
 
 				if (typeof key === "string") {
+
 					if (this.__data[key] !== val) {
-						this.__data[key] = val;
-						if (trigger !== false) {
-							this.trigger('change:' + key, key, val);
+
+						if (this['set_' + key]) {
+							val = this['set_' + key](val);
+						}
+
+						else {
+							this.__data[key] = val;
 						}
 					}
+
+					else {
+						trigger = false;
+					}
+
+					if (trigger !== false) {
+						this.trigger('change:' + key, key, val);
+					}
+
 					return val;
 				}
 
