@@ -513,7 +513,7 @@ define(
 				m.splice(0, 1);
 				m2.splice(0, 1);
 
-				for (l = m.length, i = l; i >= 0; i --) {
+				for (i = 0, l = m.length; i < l; i ++) {
 					if (m[i] !== m2[i] && typeof m2[i] !== "undefined") {
 						return false;
 					}
