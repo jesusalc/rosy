@@ -66,7 +66,7 @@ define(
 				for (l = this._routes.length, i = 0; i < l; i ++) {
 
 					r = this._routes[i];
-					m = r.path.exec(route);
+					m = r.path.exec(route.split("?")[0]);
 
 					if (m) {
 
