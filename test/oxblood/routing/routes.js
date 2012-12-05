@@ -64,6 +64,13 @@ define(
 							}
 						},
 						{
+							"viewClass" : prefix + "views/Test1",
+							"route" : new RegExp("(testRegEx)([a-zA-Z0-9_-]+)(/?)$"),
+							"config" : {
+								"test" : "testRegEx"
+							}
+						},
+						{
 							"viewClass" : null,
 							"route" : "/nothing"
 						},

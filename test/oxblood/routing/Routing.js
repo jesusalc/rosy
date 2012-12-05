@@ -45,6 +45,13 @@ define(
 					});
 				});
 
+				it("should support RegEx routes", function (done) {
+					ViewManager.changeRoute("/testRegEx123131/", "sync", function () {
+						expect(ViewManager.getViewGroup("main").currentView.config.test).to.equal("testRegEx");
+						done();
+					});
+				});
+
 				it("should be able to close view groups programatically", function (done) {
 					ViewManager.closeViewGroup("main", function () {
 						expect(ViewManager.getViewGroup("main").currentView).to.equal(null);
