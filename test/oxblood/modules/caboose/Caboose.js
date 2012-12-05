@@ -4,16 +4,24 @@ define(
 		"OxBlood",
 		"rosy/base/Class",
 		"rosy/modules/Module",
-		"rosy/modules/caboose/Caboose"
+		"rosy/modules/caboose/Caboose",
+		"$"
 	],
 
-	function (OxBlood, Class, Module, Caboose) {
+	function (OxBlood, Class, Module, Caboose, $) {
 
 		/*global describe, expect, it, before, beforeEach, after, afterEach */
 
 		"use strict";
 
 		OxBlood.addModuleTests(function () {
+
+			var dummy = $("#caboose"),
+				animationDuration = dummy.css("animation-duration");
+
+			if (!animationDuration) {
+				return;
+			}
 
 			describe("Module: Caboose", function () {
 

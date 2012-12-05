@@ -24,9 +24,9 @@ define(
 					view,
 					path;
 
-				for (l = viewGroups.length, i = l - 1; i >= 0; i --) {
+				for (i = 0, l = viewGroups.length; i < l; i ++) {
 
-					for (l2 = viewGroups[i].routes.length, j = l2 - 1; j >= 0; j --) {
+					for (j = 0, l2 = viewGroups[i].routes.length; j < l2; j ++) {
 
 						view = viewGroups[i].routes[j];
 						view.routes = view.routes || [];
@@ -35,7 +35,7 @@ define(
 							view.routes.push(view.route);
 						}
 
-						for (l3 = view.routes.length, k = l3 - 1; k >= 0; k --) {
+						for (k = 0, l3 = view.routes.length; k < l3; k ++) {
 
 							path = this._normalize(view.routes[k]);
 
@@ -66,7 +66,7 @@ define(
 				for (l = this._routes.length, i = 0; i < l; i ++) {
 
 					r = this._routes[i];
-					m = r.path.exec(route);
+					m = r.path.exec(route.split("?")[0]);
 
 					if (m) {
 

@@ -24,13 +24,30 @@ define(
 				var i;
 
 				if (typeof key === "string") {
+
 					if (this.__data[key] !== val) {
-						this.__data[key] = val;
-						if (trigger !== false) {
-							this.trigger('change:' + key, key, val);
+
+						if (this['set_' + key]) {
+							val = this['set_' + key](val);
+						}
+
+						else {
+							this.__data[key] = val;
 						}
 					}
-				} else {
+
+					else {
+						trigger = false;
+					}
+
+					if (trigger !== false) {
+						this.trigger('change:' + key, key, val);
+					}
+
+					return val;
+				}
+
+				else {
 					for (i in key) {
 						this.set(i, key[i], val);
 					}
@@ -41,6 +58,9 @@ define(
 				var i, output;
 
 				if (key) {
+					if (this['get_' + key]) {
+						return this['get_' + key]();
+					}
 					return this.__data[key];
 				}
 
