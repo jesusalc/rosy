@@ -112,9 +112,8 @@ define(
 
 					//  test 1 -> test single route with optional param
 					ViewManager.changeRoute("/refresh/a", "sync", function () {
-						var view = ViewManager.getViewGroup("main").currentView;
 
-						expect(ViewManager.getViewGroup("main").currentView).to.equal(view);
+						var view = ViewManager.getViewGroup("main").currentView;
 
 						ViewManager.changeRoute("/refresh/b", "sync", function () {
 
