@@ -3,6 +3,7 @@ define(
 	[
 		"OxBlood",
 		"./Transitions",
+		"./History",
 		"rosy/views/Router",
 		"./views/CanCloseTest",
 		"./views/Test1",
@@ -10,7 +11,7 @@ define(
 		"./views/Test3"
 	],
 
-	function (OxBlood, Transitions, Router, CanCloseTest, Test1, Test2, Test3) {
+	function (OxBlood, Transitions, History, Router, CanCloseTest, Test1, Test2, Test3) {
 
 		/*global describe, expect, it, before, beforeEach, after, afterEach */
 
@@ -27,7 +28,8 @@ define(
 
 		OxBlood.addRoutingTests(function () {
 
-			var transitions = new Transitions();
+			var transitions = new Transitions(),
+				history = new History();
 
 			describe("Router", function () {
 

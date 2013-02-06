@@ -3,10 +3,11 @@ define(
 	[
 		"../base/Class",
 		"../utils/Utils",
+		"rosy/views/ViewNotification",
 		"./Route"
 	],
 
-	function (Class, Utils, Route) {
+	function (Class, Utils, ViewNotification, Route) {
 
 		"use strict";
 
@@ -121,6 +122,9 @@ define(
 				nextRoute.loadViewClass(this.proxy(function (View) {
 					this.view = new View(nextRoute.config, nextRoute.params(path));
 					this.transition();
+					this.publish(ViewNotification.VIEW_CHANGED, {
+						view : this.view
+					});
 				}));
 			},
 

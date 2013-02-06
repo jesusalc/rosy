@@ -3,11 +3,14 @@ define(
 	[
 		"OxBlood",
 		"rosy/base/Class",
+		"rosy/views/HistoryRouter",
+		"rosy/views/HashRouter",
 		"rosy/views/ViewNotification",
-		"./routes"
+		"./views/Test1",
+		"./views/Test2"
 	],
 
-	function (OxBlood, Class, ViewNotification, routes) {
+	function (OxBlood, Class, HistoryRouter, HashRouter, ViewNotification, Test1, Test2) {
 
 		/*global describe, expect, it, before, beforeEach, after, afterEach */
 
@@ -23,11 +26,14 @@ define(
 
 				describe("useHistory = false", function () {
 
+					var router = new HistoryRouter([], {
+						usePushState : false
+					});
+
 					before(function (done) {
-						ViewManager.getViewGroup("main").config.useHistory = false;
-						ViewManager.changeRoute("/test5", null, function () {
-							done();
-						});
+						router.addRoute('/r', Test1);
+						router.route('/r');
+						done();
 					});
 
 					it("should successfully change view without updating history", function (done) {
@@ -37,31 +43,65 @@ define(
 
 				});
 
+				describe("useHistory = '#'", function () {
+
+					var router = new HashRouter();
+					router.addRoute('/r1', Test1);
+					router.addRoute('/r2', Test2);
+					router.addRoute('/r3', Test2);
+
+					it("should successfully push hash changes", function (done) {
+						router.route('/r1');
+
+						expect(router.path).to.equal('/r1');
+						expect(window.location.hash).to.equal('#/r1');
+
+						done();
+					});
+
+					it("should successfully listen for hash changes", function (done) {
+						var subscriber = new Class();
+						subscriber.subscribe(ViewNotification.VIEW_CHANGED, function (n) {
+
+							expect(window.location.hash).to.equal('#/r2');
+							expect(router.path).to.equal("/r2");
+
+							subscriber.unsubscribe(ViewNotification.VIEW_CHANGED);
+
+							done();
+						});
+
+						window.location.hash = "/r2";
+					});
+				});
+
 				if (HISTORY_SUPPORT) {
 
 					describe("useHistory = true", function () {
 
+						var router = new HistoryRouter([], {
+							usePushState : true
+						});
+
 						before(function (done) {
-							ViewManager.getViewGroup("main").config.useHistory = true;
+							router.addRoute('/r1', Test1);
+							router.addRoute('/r2', Test2);
 							done();
 						});
 
 						it("should successfully push state", function (done) {
-
-							var route = "/test1";
-
-							ViewManager.changeRoute(route, null, function () {
-								expect(window.location.pathname).to.equal(route);
-								done();
-							});
+							router.route('/r1');
+							expect(window.location.pathname).to.equal('/r1');
+							expect(router.path).to.equal("/r1");
+							done();
 						});
 
 						it("should successfully listen for pop state", function (done) {
-
-							ViewManager.changeRoute("/test2");
+							router.route('/r2');
 
 							var onPopState = function () {
-								expect(window.location.pathname).to.equal("/test1");
+								expect(window.location.pathname).to.equal("/r1");
+								expect(router.path).to.equal("/r1");
 								window.removeEventListener('popstate', onPopState);
 								history.pushState(null, null, REAL_URL);
 								done();
@@ -73,45 +113,6 @@ define(
 						});
 					});
 				}
-
-				describe("useHistory = '#'", function () {
-
-					before(function (done) {
-						ViewManager.getViewGroup("main").config.useHistory = "#";
-						done();
-					});
-
-					it("should successfully push hash changes", function (done) {
-
-						var route = "/test3";
-
-						ViewManager.changeRoute(route, null, function () {
-							expect(window.location.hash).to.equal('#' + route);
-							done();
-						});
-					});
-
-					it("should successfully listen for hash changes", function (done) {
-
-						var route = "/test4";
-
-						var subscriber = new Class();
-						subscriber.subscribe(ViewNotification.VIEW_CHANGED, function (n) {
-
-							expect(ViewManager.getViewGroup("main").currentView.config.test).to.equal("test4");
-
-							if (HISTORY_SUPPORT) {
-								history.pushState(null, null, REAL_URL);
-							}
-
-							subscriber.unsubscribe(ViewNotification.VIEW_CHANGED);
-
-							done();
-						});
-
-						window.location.hash = route;
-					});
-				});
 			});
 
 		};
