@@ -2,6 +2,7 @@ define(
 
 	[
 		"OxBlood",
+		"./Transitions",
 		"rosy/views/Router",
 		"./views/CanCloseTest",
 		"./views/Test1",
@@ -9,13 +10,14 @@ define(
 		"./views/Test3"
 	],
 
-	function (OxBlood, Router, CanCloseTest, Test1, Test2, Test3) {
+	function (OxBlood, Transitions, Router, CanCloseTest, Test1, Test2, Test3) {
 
 		/*global describe, expect, it, before, beforeEach, after, afterEach */
 
 		"use strict";
 
 		var specificityRouter = new Router();
+
 		specificityRouter.addRoute("/a", "one");
 		specificityRouter.addRoute("/b/d", "two");
 		specificityRouter.addRoute("/b", "three");
@@ -24,6 +26,8 @@ define(
 		specificityRouter.addRoute(new RegExp("(testRegEx)([a-zA-Z0-9_-]+)(/?)$"), "six");
 
 		OxBlood.addRoutingTests(function () {
+
+			var transitions = new Transitions();
 
 			describe("Router", function () {
 

@@ -175,8 +175,7 @@ define(
 
 				// get the next in the queue
 				var next = this._queue.shift(),
-					count,
-					wait;
+					count, wait;
 
 				//console.log('_nextInTransition', next);
 

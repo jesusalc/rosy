@@ -58,6 +58,13 @@ define(
 				"transitionOutComplete",
 				"cleanup",
 				"cleanupComplete"
+			],
+
+			close : [
+				"transitionOut",
+				"transitionOutComplete",
+				"cleanup",
+				"cleanupComplete"
 			]
 		};
 
@@ -84,7 +91,7 @@ define(
 					callbacks = [],
 					subscriber = new Class(),
 					router = new Router([], {
-						transition : name
+						transition : name === "close" ? "sync" : name
 					}),
 					transition = transitions[name];
 
@@ -107,7 +114,7 @@ define(
 				}
 
 				function whenDone(cb) {
-					if (steps.length > 7) {
+					if (steps.length >= transition.length) {
 						cb();
 					} else {
 						callbacks.push(cb);
@@ -116,12 +123,12 @@ define(
 
 				function checkDone() {
 					var i;
-					if (steps.length === 8) {
+					if (steps.length === transition.length) {
 						for (i = 0; i < callbacks.length; i ++) {
 							callbacks[i]();
-							subscriber.unsubscribe();
-							callbacks = [];
 						}
+						subscriber.unsubscribe();
+						callbacks = [];
 					}
 				}
 
@@ -144,7 +151,11 @@ define(
 						testTransitionStep(i);
 					}
 
-					router.route("/transition/" + name);
+					if (name === "close") {
+						router.close();
+					} else {
+						router.route("/transition/" + name);
+					}
 				});
 			}
 
