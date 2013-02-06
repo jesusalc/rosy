@@ -3,13 +3,12 @@ define(
 	[
 		"OxBlood",
 		"rosy/base/Class",
-		"rosy/views/ViewManager",
 		"./History",
 		"./Transitions",
 		"./routes"
 	],
 
-	function (OxBlood, Class, ViewManager, History, Transitions, routes) {
+	function (OxBlood, Class, History, Transitions, routes) {
 
 		/*global describe, expect, it, before, beforeEach, after, afterEach */
 
@@ -19,7 +18,7 @@ define(
 			REAL_HASH = window.location.hash = "",
 			HISTORY_SUPPORT = window.history && window.history.pushState;
 
-
+/*
 		OxBlood.addRoutingTests(function () {
 
 			describe("View Routing", function () {
@@ -113,5 +112,6 @@ define(
 
 			});
 		});
+*/
 	}
 );

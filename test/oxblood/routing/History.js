@@ -3,12 +3,11 @@ define(
 	[
 		"OxBlood",
 		"rosy/base/Class",
-		"rosy/views/ViewManager",
 		"rosy/views/ViewNotification",
 		"./routes"
 	],
 
-	function (OxBlood, Class, ViewManager, ViewNotification, routes) {
+	function (OxBlood, Class, ViewNotification, routes) {
 
 		/*global describe, expect, it, before, beforeEach, after, afterEach */
 

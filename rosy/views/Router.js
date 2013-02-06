@@ -19,7 +19,8 @@ define(
 
 		return Class.extend({
 
-			_path : null,
+			path : null,
+			_newPath : null,
 			_routes : [],
 			_links : [],
 			_sequence : "async",
@@ -70,9 +71,8 @@ define(
 			link : function (other) {
 				var i;
 				for (i = 0; i < this._links.length; i++) {
-					// already linked
 					if (this._links[i] === other) {
-						return;
+						return; // already linked
 					}
 				}
 				this._links.push(other);
@@ -84,20 +84,31 @@ define(
 			**********************/
 
 			route : function (path) {
+				// don't route if none of the linked routers can be routed
 				var i;
-				// fail early to prevent double routing
-				if (this._path === path) {
+				if (!this.canRoute()) {
 					return;
 				}
-				this._path = path;
-				this.onRoute(path);
-
-				// the linked routers should use the same route
 				for (i = 0; i < this._links.length; i++) {
-					if (this._links[i].route(path)) {
+					if (!this._links[i].canRoute()) {
 						return;
 					}
 				}
+
+				if (this._newPath !== path) {
+					this._newPath = path;
+					this.onRoute(path);
+					for (i = 0; i < this._links.length; i++) {
+						this._links[i].route(path);
+					}
+				}
+			},
+
+			canRoute : function () {
+				if (this.view) {
+					return this.view.canClose();
+				}
+				return true;
 			},
 
 			onRoute : function (path) {
@@ -105,6 +116,7 @@ define(
 				if (!nextRoute) {
 					return;
 				}
+				this.path = path;
 				this._lastView = this.view;
 				nextRoute.loadViewClass(this.proxy(function (View) {
 					this.view = new View(nextRoute.config, nextRoute.params(path));

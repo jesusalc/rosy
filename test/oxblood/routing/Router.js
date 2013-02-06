@@ -2,10 +2,14 @@ define(
 
 	[
 		"OxBlood",
-		"rosy/views/Router"
+		"rosy/views/Router",
+		"./views/CanCloseTest",
+		"./views/Test1",
+		"./views/Test2",
+		"./views/Test3"
 	],
 
-	function (OxBlood, Router) {
+	function (OxBlood, Router, CanCloseTest, Test1, Test2, Test3) {
 
 		/*global describe, expect, it, before, beforeEach, after, afterEach */
 
@@ -104,6 +108,98 @@ define(
 					expect(route.params('/some/thing/else/here').a).to.equal('thing');
 					expect(route.params('/some/thing/else/here').b).to.equal('else');
 					expect(route.params('/some/thing/else/here').c).to.equal('here');
+					done();
+				});
+
+				it("should allow you to cancel route changes", function (done) {
+					var router = new Router(),
+						view = new CanCloseTest();
+					router.addRoute('/home', Test1);
+					router.view = view;
+
+					view.locked = true;
+
+					router.route('/home');
+					expect(router.view).to.equal(view);
+
+					view.locked = false;
+
+					router.route('/home');
+					expect(router.view).to.not.equal(view);
+
+					done();
+				});
+
+				it("should update linked routers", function (done) {
+					var routerA = new Router(),
+						routerB = new Router(),
+						routerC = new Router();
+
+					routerA.addRoute('/a', Test1);
+					routerA.addRoute('/b', Test2);
+					routerB.addRoute('/a', Test1);
+					routerB.addRoute('/b', Test2);
+					routerC.addRoute('/a', Test1);
+					routerC.addRoute('/b', Test2);
+
+					routerA.link(routerB);
+					routerA.link(routerC);
+
+					routerA.route('/a');
+
+					expect(routerA.path).to.equal('/a');
+					expect(routerB.path).to.equal('/a');
+					expect(routerC.path).to.equal('/a');
+
+					routerB.route('/b');
+
+					expect(routerA.path).to.equal('/b');
+					expect(routerB.path).to.equal('/b');
+					expect(routerC.path).to.equal('/b');
+
+					done();
+				});
+
+				it("should allow linked routers to cancel route changes", function (done) {
+					var routerA = new Router(),
+						routerB = new Router(),
+						view = new CanCloseTest();
+
+					routerA.link(routerB);
+
+					routerB.addRoute('/home', Test1);
+					routerA.addRoute('/home', Test1);
+					routerA.view = view;
+
+					view.locked = true;
+
+					routerB.route('/home');
+					expect(routerA.path).to.equal(null);
+					expect(routerB.path).to.equal(null);
+					expect(routerA.view).to.equal(view);
+
+					view.locked = false;
+
+					routerB.route('/home');
+					expect(routerA.path).to.equal('/home');
+					expect(routerB.path).to.equal('/home');
+					expect(routerA.view).to.not.equal(view);
+
+					done();
+				});
+
+				it("should not change the path if there are no route matches", function (done) {
+					var router = new Router();
+
+					router.addRoute('/alt', Test1);
+					expect(router.path).to.equal(null);
+
+					router.route('/home');
+					expect(router.path).to.equal(null);
+
+					router.route('/alt');
+					expect(router.path).to.equal('/alt');
+
 					done();
 				});
 
