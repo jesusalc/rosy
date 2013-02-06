@@ -3,12 +3,12 @@ define(
 	[
 		"OxBlood",
 		"rosy/base/Class",
-		"rosy/views/ViewManager",
+		"rosy/views/Router",
 		"rosy/views/ViewNotification",
-		"./routes"
+		"./views/Test1"
 	],
 
-	function (OxBlood, Class, ViewManager, ViewNotification, routes) {
+	function (OxBlood, Class, Router, ViewNotification, TestView) {
 
 		/*global describe, expect, it, before, beforeEach, after, afterEach */
 
@@ -72,7 +72,7 @@ define(
 			"cleanupComplete"       : ViewNotification.VIEW_CLEANUP_COMPLETED
 		};
 
-		var positions = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eigth"];
+		var positions = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"];
 
 
 		return function () {
@@ -81,58 +81,74 @@ define(
 
 				var i,
 					steps = [],
-					subscriber,
+					callbacks = [],
+					subscriber = new Class(),
+					router = new Router([], {
+						transition : name
+					}),
 					transition = transitions[name];
 
-				function testTransitionStep(i) {
-					it("should call " + transition[i] + " " + positions[i], function (done) {
-						expect(steps[i]).to.equal(transition[i]);
-						done();
-					});
-				}
+				router.addRoute("/home", TestView);
+				router.addRoute("/transition/sync", "routing/views/Sync");
+				router.addRoute("/transition/async", "routing/views/Async");
+				router.addRoute("/transition/preload", "routing/views/Preload");
+				router.addRoute("/transition/reverse", "routing/views/Reverse");
+
+				// initialize the first view so we don't get events for load + transitionIn on that view
+				router.view = new TestView();
 
 				function subscribeToStep(m) {
 					subscriber.subscribe(mappings[m], function (n) {
-						steps.push(m);
-						subscriber.unsubscribe(mappings[m]);
+						if (router.view === n.data.view || router._lastView === n.data.view) {
+							steps.push(m);
+							checkDone();
+						}
+					});
+				}
+
+				function whenDone(cb) {
+					if (steps.length > 7) {
+						cb();
+					} else {
+						callbacks.push(cb);
+					}
+				}
+
+				function checkDone() {
+					var i;
+					if (steps.length === 8) {
+						for (i = 0; i < callbacks.length; i ++) {
+							callbacks[i]();
+							subscriber.unsubscribe();
+							callbacks = [];
+						}
+					}
+				}
+
+				function testTransitionStep(i) {
+					it("should call " + transition[i] + " " + positions[i], function (done) {
+						whenDone(function () {
+							expect(steps[i]).to.equal(transition[i]);
+							done();
+						});
 					});
 				}
 
 				describe(name, function () {
 
-					before(function (done) {
+					for (var m in mappings) {
+						subscribeToStep(m);
+					}
 
-						subscriber = new Class();
-
-						for (var m in mappings) {
-							subscribeToStep(m);
-						}
-
-						ViewManager.changeRoute("/transition/" + name,  name, function () {
-							done();
-						});
-					});
-
-					after(function (done) {
-						steps = [];
-						subscriber.unsubscribe();
-						subscriber.destroy();
-						done();
-					});
-
-					for (i = 0; i < transition.length; i ++) {
+					for (var i in transition) {
 						testTransitionStep(i);
 					}
+
+					router.route("/transition/" + name);
 				});
 			}
 
 			describe("Transitions", function () {
-
-				before(function (done) {
-					ViewManager.getViewGroup("main").config.useHistory = false;
-					ViewManager.changeRoute("/test1", "sync", done);
-				});
-
 				for (var transition in transitions) {
 					testTransition(transition);
 				}

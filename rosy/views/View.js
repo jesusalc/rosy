@@ -26,7 +26,6 @@ define(
 			config : null,
 			data : null,
 			params : null,
-			viewGroup : null,
 			viewClass : null,
 			routeRegEx : null,
 
@@ -105,7 +104,7 @@ define(
 			**/
 
 			load : function () {
-				ERROR_HANDLER(new Error(this.viewClass + " must implement the load() method."));
+				ERROR_HANDLER(new Error("View must implement the load() method."));
 			},
 
 			/**
@@ -116,7 +115,7 @@ define(
 			**/
 
 			transitionIn : function () {
-				ERROR_HANDLER(new Error(this.viewClass + " must implement the transitionIn() method."));
+				ERROR_HANDLER(new Error("View must implement the transitionIn() method."));
 			},
 
 			/**
@@ -127,7 +126,7 @@ define(
 			**/
 
 			transitionOut : function () {
-				ERROR_HANDLER(new Error(this.viewClass + " must implement the transitionOut() method."));
+				ERROR_HANDLER(new Error("View must implement the transitionOut() method."));
 			},
 
 			/**
@@ -139,7 +138,7 @@ define(
 			**/
 
 			destroy : function () {
-				ERROR_HANDLER(new Error(this.viewClass + " must implement the destroy() method."));
+				ERROR_HANDLER(new Error("View must implement the destroy() method."));
 			},
 
 			/**
@@ -154,16 +153,8 @@ define(
 				this.cleanupComplete();
 			},
 
-			changeRoute : function () {
-				this.viewGroup.viewManager.changeRoute.apply(null, arguments);
-			},
-
 			updateTitle : function (title) {
-				this.viewGroup.viewManager.updateTitle(title);
-			},
 
-			closeViewGroup : function () {
-				this.viewGroup.close.apply(null, arguments);
 			},
 
 			/**
@@ -179,8 +170,7 @@ define(
 				}
 
 				this.publish(ViewNotification.VIEW_LOAD_COMPLETED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 
 				return this._loadCB ? this._loadCB() : null;
@@ -194,8 +184,7 @@ define(
 				}
 
 				this.publish(ViewNotification.VIEW_IN_COMPLETED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 
 				return this._inCB ? this._inCB() : null;
@@ -209,8 +198,7 @@ define(
 				}
 
 				this.publish(ViewNotification.VIEW_OUT_COMPLETED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 
 				return this._outCB ? this._outCB() : null;
@@ -226,8 +214,7 @@ define(
 				this.__destroy();
 
 				this.publish(ViewNotification.VIEW_CLEANUP_COMPLETED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 
 				return this._cleanupCB ? this._cleanupCB() : null;
@@ -238,20 +225,17 @@ define(
 			* Any method that starts with "__" is internal and is not meant to be extended.
 			**/
 
-			__init : function (viewGroup, config, params, data) {
-
+			__init : function (config, params, data) {
 				this.data = {};
 				this.params = {};
 
-				this.viewGroup = viewGroup;
 				this.config = config;
 				this.__update(params, data, true);
 
 				this.init();
 
 				this.publish(ViewNotification.VIEW_INITIALIZED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 			},
 
@@ -260,8 +244,7 @@ define(
 
 				if (!can) {
 					this.publish(ViewNotification.VIEW_CHANGE_CANCELLED, {
-						view : this,
-						viewGroup: this.viewGroup
+						view : this
 					});
 				}
 
@@ -275,8 +258,7 @@ define(
 				if (!isInit) {
 					if (this.update(params, data) === false) {
 						this.publish(ViewNotification.VIEW_UPDATE_CANCELLED, {
-							view : this,
-							viewGroup: this.viewGroup
+							view : this
 						});
 
 						return false;
@@ -292,22 +274,20 @@ define(
 				}
 
 				this.publish(ViewNotification.VIEW_UPDATED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 			},
 
 			__load : function (cb) {
 
 				this._loadTimeout = this.setTimeout(function () {
-					ERROR_HANDLER(new Error(this.viewClass + " : loadComplete() was never called."));
+					ERROR_HANDLER(new Error("View : loadComplete() was never called."));
 				}, MAX_WAIT_TIME);
 
 				this._loadCB = cb;
 
 				this.publish(ViewNotification.VIEW_LOAD_STARTED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 
 				this.load.call(this);
@@ -316,31 +296,28 @@ define(
 			__transitionIn : function (cb) {
 
 				this._inTimeout = this.setTimeout(function () {
-					ERROR_HANDLER(new Error(this.viewClass + " : transitionInComplete() was never called."));
+					ERROR_HANDLER(new Error("View : transitionInComplete() was never called."));
 				}, MAX_WAIT_TIME);
 
 				this._inCB = cb;
 
 				this.publish(ViewNotification.VIEW_IN_STARTED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 
 				this.transitionIn.call(this);
-				this.viewGroup.activate();
 			},
 
 			__transitionOut : function (cb) {
 
 				this._outTimeout = this.setTimeout(function () {
-					ERROR_HANDLER(new Error(this.viewClass + " : transitionOutComplete() was never called."));
+					ERROR_HANDLER(new Error("View : transitionOutComplete() was never called."));
 				}, MAX_WAIT_TIME);
 
 				this._outCB = cb;
 
 				this.publish(ViewNotification.VIEW_OUT_STARTED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 
 				this.transitionOut.call(this);
@@ -349,14 +326,13 @@ define(
 			__cleanup : function (cb) {
 
 				this._cleanupTimeout = this.setTimeout(function () {
-					ERROR_HANDLER(new Error(this.viewClass + " : cleanupComplete() was never called."));
+					ERROR_HANDLER(new Error("View : cleanupComplete() was never called."));
 				}, MAX_WAIT_TIME);
 
 				this._cleanupCB = cb;
 
 				this.publish(ViewNotification.VIEW_CLEANUP_STARTED, {
-					view : this,
-					viewGroup: this.viewGroup
+					view : this
 				});
 
 				this.cleanup.call(this);
