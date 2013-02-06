@@ -2,12 +2,12 @@ define(
 
 	[
 		"../base/Class",
-		"../utils/Utils",
 		"rosy/views/ViewNotification",
-		"./Route"
+		"./Route",
+		"$"
 	],
 
-	function (Class, Utils, ViewNotification, Route) {
+	function (Class, ViewNotification, Route, $) {
 
 		"use strict";
 
@@ -22,6 +22,7 @@ define(
 
 			path : null,
 			_newPath : null,
+			_route : null,
 			_routes : [],
 			_links : [],
 			_sequence : "async",
@@ -35,6 +36,48 @@ define(
 				this._queue = [];
 				this.addRoutes(routes);
 				this._sequence = config && config.transition || "async";
+			},
+
+			/**********************
+				Hijacking
+			**********************/
+
+			hijack : function (container, selector, events) {
+
+			},
+
+			_onLinkClick : function (e) {
+
+			},
+
+			/******************************
+				Setting active class
+			******************************/
+
+			activate : function (container, selector, activeClass, disabledClass) {
+				this.on('route', this.proxy(function () {
+					container.find(selector).each(this.proxy(function (i, dom) {
+						dom = $(dom);
+						var href = dom.data("route") || dom.attr("href");
+						href = href.replace('#', '');
+						if (this._hrefMatchesPath(href, this.path)) {
+							dom.addClass(activeClass || 'active');
+						} else {
+							dom.removeClass(activeClass || 'active');
+						}
+					}));
+				}));
+			},
+
+			_hrefMatchesPath : function (href, path) {
+				var i;
+				console.log(href, path);
+				for (i = 1; i < href.length; i++) {
+					if (href[i] !== path[i]) {
+						return false;
+					}
+				}
+				return true;
 			},
 
 			/**********************
@@ -117,6 +160,7 @@ define(
 				if (!nextRoute) {
 					return;
 				}
+				this._route = nextRoute;
 				this.path = path;
 				this._lastView = this.view;
 				nextRoute.loadViewClass(this.proxy(function (View) {
@@ -126,6 +170,7 @@ define(
 						view : this.view
 					});
 				}));
+				this.trigger('route');
 			},
 
 			routeForPath : function (path) {

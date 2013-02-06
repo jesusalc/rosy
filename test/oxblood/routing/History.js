@@ -20,7 +20,7 @@ define(
 			REAL_HASH = window.location.hash = "",
 			HISTORY_SUPPORT = window.history && window.history.pushState;
 
-		return function () {
+		OxBlood.addRoutingTests(function () {
 
 			describe("History Management", function () {
 
@@ -115,6 +115,6 @@ define(
 				}
 			});
 
-		};
+		});
 	}
 );

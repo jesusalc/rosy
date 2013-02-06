@@ -82,7 +82,7 @@ define(
 		var positions = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"];
 
 
-		return function () {
+		OxBlood.addRoutingTests(function () {
 
 			function testTransition(name) {
 
@@ -164,6 +164,6 @@ define(
 					testTransition(transition);
 				}
 			});
-		};
+		});
 	}
 );

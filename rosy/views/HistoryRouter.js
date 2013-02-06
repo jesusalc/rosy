@@ -13,15 +13,14 @@ define(
 		return Router.extend({
 
 			_usePushState : true,
+			_selectors : "[data-route], a[href^='/']",
 
 			init : function (routes, config) {
 				this.sup.apply(this, arguments);
 
-				if (config.usePushState === false) {
-					this._usePushState = false;
-				}
+				this._usePushState = config.usePushState && HISTORY_SUPPORTED;
 
-				if (HISTORY_SUPPORTED && this._usePushState) {
+				if (this._usePushState) {
 					window.addEventListener('popstate', this._onPopState);
 				}
 			},
@@ -38,7 +37,7 @@ define(
 
 			onRoute : function (path) {
 				this.sup(path);
-				if (HISTORY_SUPPORTED && this._usePushState) {
+				if (this._usePushState) {
 					history.pushState(null, "", path);
 				}
 			}
