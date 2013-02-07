@@ -30,12 +30,17 @@ define(
 			_lastView : null,
 			view : null,
 
+			disabledClass : "",
+
 			init : function (routes, config) {
 				this._routes = [];
 				this._links = [];
 				this._queue = [];
 				this.addRoutes(routes);
-				this._sequence = config && config.transition || "async";
+
+				this.config = config || {};
+				this._sequence = this.config.transition || "async";
+				this._disabledClass = this.config.disabledClass || "disabled";
 			},
 
 			/**********************
@@ -43,24 +48,40 @@ define(
 			**********************/
 
 			hijack : function (container, selector, events) {
-
+				container.on(events, selector, this._onLinkClick);
 			},
 
 			_onLinkClick : function (e) {
+				var dom = $(e.currentTarget),
+					data = dom.data(),
+					route = data.route || dom.attr("href");
 
+				if (dom.attr("target")) {
+					return;
+				}
+
+				if (this._disabledClass && dom.hasClass(this._disabledClass)) {
+					e.preventDefault();
+					return false;
+				}
+
+				if (route && this.route(route)) {
+					e.preventDefault();
+					return false;
+				}
 			},
 
 			/******************************
 				Setting active class
 			******************************/
 
-			activate : function (container, selector, activeClass, disabledClass) {
+			activate : function (container, selector, activeClass) {
 				this.on('route', this.proxy(function () {
 					container.find(selector).each(this.proxy(function (i, dom) {
 						dom = $(dom);
 						var href = dom.data("route") || dom.attr("href");
 						href = href.replace('#', '');
-						if (this._hrefMatchesPath(href, this.path)) {
+						if (this._hrefMatchesPath(href, this.path) && !dom.hasClass(this._disabledClass)) {
 							dom.addClass(activeClass || 'active');
 						} else {
 							dom.removeClass(activeClass || 'active');
@@ -71,7 +92,6 @@ define(
 
 			_hrefMatchesPath : function (href, path) {
 				var i;
-				console.log(href, path);
 				for (i = 1; i < href.length; i++) {
 					if (href[i] !== path[i]) {
 						return false;
@@ -139,6 +159,8 @@ define(
 					}
 				}
 
+				path = this._normalizePath(path);
+
 				if (this._newPath !== path) {
 					this._newPath = path;
 					this.onRoute(path);
@@ -146,6 +168,7 @@ define(
 						this._links[i].route(path);
 					}
 				}
+				return true;
 			},
 
 			canRoute : function () {
@@ -173,8 +196,16 @@ define(
 				this.trigger('route');
 			},
 
+			_normalizePath : function (path) {
+				// force path to start with / and strip off #
+				return "/" + path.replace(/^(\/|#\/)/, '');
+			},
+
 			routeForPath : function (path) {
 				var i;
+
+				path = this._normalizePath(path);
+
 				for (i = 0; i < this._routes.length; i++) {
 					if (this._routes[i].matches(path)) {
 						return this._routes[i];

@@ -123,7 +123,7 @@ define(
 					router.addRoute("/b/else", Test1);
 					router.activate(container, "a[href^='#']");
 
-					it("should add an active class to hrefs", function (done) {
+					it("should add an active class to hashes", function (done) {
 						router.route('/a');
 
 						expect(hashLinkA.hasClass('active')).to.be(true);
@@ -134,7 +134,7 @@ define(
 						done();
 					});
 
-					it("should remove active class from hrefs", function (done) {
+					it("should remove active class from hashes", function (done) {
 						router.route('/b');
 
 						expect(hashLinkA.hasClass('active')).to.be(false);
@@ -144,7 +144,7 @@ define(
 						done();
 					});
 
-					it("should add active class if the href starts with the path", function (done) {
+					it("should add active class if the hash starts with the path", function (done) {
 						router.route('/b/else');
 
 						expect(hashLinkA.hasClass('active')).to.be(false);
@@ -162,7 +162,7 @@ define(
 					router.addRoute("/b/else", Test1);
 					router.activate(container, "[data-route], a[href^='/'], a[href^='#']");
 
-					it("should add an active class to hrefs", function (done) {
+					it("should add an active class to multiple types", function (done) {
 						router.route('/a');
 
 						expect(hashLinkA.hasClass('active')).to.be(true);
@@ -175,7 +175,7 @@ define(
 						done();
 					});
 
-					it("should remove active class from hrefs", function (done) {
+					it("should remove active class from multiple types", function (done) {
 						router.route('/b');
 
 						expect(hashLinkA.hasClass('active')).to.be(false);
@@ -191,7 +191,7 @@ define(
 						done();
 					});
 
-					it("should add active class if the href starts with the path", function (done) {
+					it("should add active class if the href/route starts with the path", function (done) {
 						router.route('/b/else');
 
 						expect(hashLinkA.hasClass('active')).to.be(false);
@@ -203,6 +203,49 @@ define(
 						expect(dataRouteLinkA.hasClass('active')).to.be(false);
 						expect(dataRouteLinkB.hasClass('active')).to.be(true);
 						expect(dataRouteLinkBElse.hasClass('active')).to.be(true);
+
+						done();
+					});
+				});
+
+				describe("Don't add the active class to disabled elements", function () {
+					var router = new Router();
+					router.addRoute("/a", Test1);
+					router.addRoute("/b", Test1);
+					router.addRoute("/b/else", Test1);
+					router.activate(container, "[data-route], a[href^='/'], a[href^='#']");
+
+					it("should not add an active class to disabled elements", function (done) {
+						hashLinkA.addClass('disabled');
+
+						router.route('/b');
+						router.route('/a');
+						expect(hashLinkA.hasClass('active')).to.be(false);
+
+						hashLinkA.removeClass('disabled');
+
+						router.route('/b');
+						router.route('/a');
+						expect(hashLinkA.hasClass('active')).to.be(true);
+
+						done();
+					});
+
+					it("should not add an active class to disabled elements with another disableClass", function (done) {
+						hashLinkA.addClass('disabled2');
+						router._disabledClass = 'disabled2';
+
+						router.route('/b');
+						router.route('/a');
+						expect(hashLinkA.hasClass('active')).to.be(false);
+
+						hashLinkA.removeClass('disabled2');
+
+						router.route('/b');
+						router.route('/a');
+						expect(hashLinkA.hasClass('active')).to.be(true);
+
+						router._disabledClass = 'disabled';
 
 						done();
 					});

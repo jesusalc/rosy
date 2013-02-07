@@ -88,6 +88,13 @@ define(
 					done();
 				});
 
+				it("should normalize leading hashes and leading slashes", function (done) {
+					expect(specificityRouter.routeForPath('a').view).to.equal("one");
+					expect(specificityRouter.routeForPath('/a').view).to.equal("one");
+					expect(specificityRouter.routeForPath('#/a').view).to.equal("one");
+					done();
+				});
+
 				it("should support optional params", function (done) {
 					expect(specificityRouter.routeForPath('/b/c/d').view).to.equal("five");
 					expect(specificityRouter.routeForPath('/b/c/e').view).to.equal("five");
