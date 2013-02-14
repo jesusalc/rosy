@@ -102,7 +102,7 @@ define(
 							"viewClass" : prefix + "views/Refresh",
 							"route" : "/refresh/:stub?",
 							"config" : {
-								"forceRefresh" : true
+								"skipUpdate" : true
 							}
 						},
 						{
@@ -112,7 +112,7 @@ define(
 								"/refresh-3"
 							],
 							"config" : {
-								"forceRefresh" : true
+								"skipUpdate" : true
 							}
 						}
 					]

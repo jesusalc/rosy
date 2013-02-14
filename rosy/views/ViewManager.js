@@ -368,7 +368,7 @@ define(
 
 							if (currentView && !viewGroup.transitioning) {
 
-								if (currentView.routeRegEx === matchedView.regex && !matchedView.viewConfig.forceRefresh) {
+								if (currentView.routeRegEx === matchedView.regex && !matchedView.viewConfig.skipUpdate) {
 									if (currentView.__update(matchedView.params, data) === false) {
 										if (cb) {
 											cb();
@@ -420,7 +420,7 @@ define(
 									this._updateHistory(data.title || "", data.route, viewGroup.config.useHistory === "#");
 								}
 
-								if (!currentView || currentView.routeRegEx !== matchedView.regex || matchedView.viewConfig.forceRefresh) {
+								if (!currentView || currentView.routeRegEx !== matchedView.regex || matchedView.viewConfig.skipUpdate) {
 									this._changeView(matchedView, data, cb);
 									didRoute = true;
 								}
