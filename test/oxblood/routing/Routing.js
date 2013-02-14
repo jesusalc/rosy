@@ -108,7 +108,7 @@ define(
 					});
 				});
 
-				it("should be able to force refresh a route instead of piping to update()", function (done) {
+				it("should be able to skip the update() method on matched routes", function (done) {
 
 					//  test 1 -> test single route with optional param
 					ViewManager.changeRoute("/refresh/a", "sync", function () {
