@@ -97,6 +97,23 @@ define(
 						{
 							"viewClass" : prefix + "views/Reverse",
 							"route" : "/transition/reverse"
+						},
+						{
+							"viewClass" : prefix + "views/Refresh",
+							"route" : "/refresh/:stub?",
+							"config" : {
+								"skipUpdate" : true
+							}
+						},
+						{
+							"viewClass" : prefix + "views/Refresh",
+							"routes" : [
+								"/refresh-2",
+								"/refresh-3"
+							],
+							"config" : {
+								"skipUpdate" : true
+							}
 						}
 					]
 				}
