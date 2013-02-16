@@ -143,13 +143,20 @@ define(
 					describe("animationDelay", function () {
 						var obj = Caboose.animationDelay;
 
+
 						it("should return an object", function () {
 							expect(obj).to.be.an("object");
 						});
 
 						it("should report value as a Number", function () {
 							expect(obj.value).to.be.a("number");
-							expect(obj.value).to.eql(0.1875);
+
+							if ($("html.ie10").length) {
+								expect(obj.value).to.eql(0.18); // IE rounds to 2 decimals
+							} else {
+								expect(obj.value).to.eql(0.1875);
+							}
+
 						});
 
 						it("should report correct time unit", function () {
@@ -158,7 +165,13 @@ define(
 
 						it("should report original CSS value", function () {
 							expect(obj.toString()).to.be.a("string");
-							expect(obj.toString()).to.eql("0.1875s");
+
+							if ($("html.ie10").length) {
+								expect(obj.toString()).to.eql("0.18s"); // IE is rounding to 2 decimals
+							} else {
+								expect(obj.toString()).to.eql("0.1875s");
+							}
+
 						});
 
 					});
