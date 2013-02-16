@@ -108,6 +108,34 @@ define(
 					});
 				});
 
+				it("should be able to skip the update() method on matched routes", function (done) {
+
+					//  test 1 -> test single route with optional param
+					ViewManager.changeRoute("/refresh/a", "sync", function () {
+
+						var view = ViewManager.getViewGroup("main").currentView;
+
+						ViewManager.changeRoute("/refresh/b", "sync", function () {
+
+							expect(view.hasUpdated).to.equal(false); // should be skipping the update() method changing route
+							expect(ViewManager.getViewGroup("main").currentView).to.not.equal(view); // should be a new view
+
+							// test 2 -> test "routes" array
+							ViewManager.changeRoute("/refresh-2", "sync", function () {
+								view = ViewManager.getViewGroup("main").currentView;
+								expect(view.hasUpdated).to.equal(false); // means we didn't call update()
+
+								ViewManager.changeRoute("/refresh-3", "sync", function () {
+									expect(view.hasUpdated).to.equal(false); // should be skipping the update() method changing route
+									expect(ViewManager.getViewGroup("main").currentView).to.not.equal(view); // should be a new view
+
+									done();
+								});
+							});
+						});
+					});
+				});
+
 				var history = new History();
 				var transitions = new Transitions();
 
