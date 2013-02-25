@@ -1,5 +1,4 @@
 require.config({
-
 	paths : {
 		"$" : "//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min",
 		"CFInstall" : "//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min",
