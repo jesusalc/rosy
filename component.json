@@ -5,7 +5,7 @@
 	"dependencies": {
 		"jquery": "~1.9.1",
 		"chrome-frame": "http://ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js",
-		"cookies": "https://raw.github.com/ScottHamper/Cookies/master/cookies.js",
+		"cookies": "https://raw.github.com/ScottHamper/Cookies/master/src/cookies.js",
 		"handlebars.js": "~1.0.9",
 		"json3": "~3.2.4",
 		"modernizr": "~2.6.1",
