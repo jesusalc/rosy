@@ -19,6 +19,14 @@
 		"mocha-phantomjs": ">=1.0.1",
 		"bunyip": "https://github.com/doctyper/bunyip/tarball/master"
 	},
+	"testling": {
+		"files": "test/*.js",
+		"browsers": [
+			"ie7", "ie8", "ie9", "ie10",
+			"firefox/17", "chrome/23", "safari/6",
+			"iphone/6", "ipad/6"
+		]
+	},
 	"scripts": {
 		"install" : "node libs/_install/installer.js",
 		"browser": "bunyip -f test/runner.html local -l 'safari|chrome|firefox'",
