@@ -3,7 +3,7 @@ module.exports = {
 		"name" : "jQuery",
 		"src" : "http://code.jquery.com/jquery.js"
 	}, {
-		name : "Google Chrome Frame",
+		"name" : "Google Chrome Frame",
 		"filename" : "cfinstall.js",
 		"src" : "http://ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"
 	}, {
