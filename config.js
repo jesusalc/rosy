@@ -1,7 +1,7 @@
 require.config({
 
 	paths : {
-		"$" : "libs/jquery/index",
+		"$" : "libs/jquery/jquery.min",
 		"CFInstall" : "libs/chrome-frame/index",
 		"ChromeFrame" : "rosy/modules/google-chrome-frame/ChromeFrame",
 		"Cookies" : "libs/cookies/index",
