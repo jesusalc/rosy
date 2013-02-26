@@ -20,7 +20,7 @@
 		"bunyip": "https://github.com/doctyper/bunyip/tarball/master"
 	},
 	"scripts": {
-		"install" : "node libs/_install/installer.js",
+		"install" : "bower install",
 		"browser": "bunyip -f test/runner.html local -l 'safari|chrome|firefox'",
 		"test": "node test/runner.js"
 	}
