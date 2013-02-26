@@ -13,5 +13,9 @@
 		"zynga-scroller-animate": "https://raw.github.com/zynga/scroller/master/src/Animate.js",
 		"requirejs": "~2.1.4",
 		"requirejs-text": "~2.0.5"
-	}
+	},
+	"ignore" : [
+		"__PROJECT_NAME__",
+		"libs/handlebars.js/.[^.]*"
+	]
 }
