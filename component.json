@@ -6,7 +6,7 @@
 		"jquery": "http://code.jquery.com/jquery-latest.js",
 		"chrome-frame": "http://ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js",
 		"cookies": "https://raw.github.com/ScottHamper/Cookies/master/src/cookies.js",
-		"handlebars": "~1.0.9",
+		"handlebars.js": "~1.0.9",
 		"json3": "~3.2.4",
 		"modernizr": "~2.6.1",
 		"zynga-scroller": "https://raw.github.com/zynga/scroller/master/src/Scroller.js",

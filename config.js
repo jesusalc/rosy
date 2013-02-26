@@ -5,7 +5,7 @@ require.config({
 		"CFInstall" : "libs/chrome-frame/index",
 		"ChromeFrame" : "rosy/modules/google-chrome-frame/ChromeFrame",
 		"Cookies" : "libs/cookies/index",
-		"Handlebars" : "libs/handlebars/dist/handlebars",
+		"Handlebars" : "libs/handlebars.js/dist/handlebars",
 		"zynga/Scroller" : "libs/zynga-scroller/index",
 		"templates" : "../../templates",
 		"json" : "libs/json3/lib/json3",
