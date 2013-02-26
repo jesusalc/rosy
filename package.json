@@ -1,27 +1,17 @@
 {
 	"name": "rosy",
 	"description": "An inheritable AMD Framework.",
-	"version": "2.1.5",
+	"version": "2.1.7",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ff0000/rosy.git"
 	},
 	"dependencies": {
-		"colors": "0.6.x",
-		"wrench": "1.3.x",
-		"requirejs": "2.0.x"
-	},
-	"devDependencies": {
-		"mocha": ">=1.6.x",
-		"union": ">=0.3.4",
-		"ecstatic": ">=0.1.6",
-		"optimist": ">=0.3.4",
-		"mocha-phantomjs": ">=1.0.1",
-		"bunyip": "https://github.com/doctyper/bunyip/tarball/master"
+		"rosy-oxblood": "https://github.com/rosy-components/rosy-oxblood/archive/1.0.0.tar.gz"
 	},
 	"scripts": {
-		"install" : "node libs/_install/installer.js",
+		"install" : "bower install --dev",
 		"browser": "bunyip -f test/runner.html local -l 'safari|chrome|firefox'",
-		"test": "node test/runner.js"
+		"test": "npm test rosy-oxblood"
 	}
 }
