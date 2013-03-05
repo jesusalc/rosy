@@ -1,17 +1,15 @@
 {
-	"name": "rosy",
-	"version": "2.1.5",
-	"main": ["./config.js"],
-	"dependencies": {
-		"jquery": "~1.9.1",
-		"chrome-frame": "http://ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js",
-		"cookies": "https://raw.github.com/ScottHamper/Cookies/master/src/cookies.js",
-		"handlebars.js": "~1.0.9",
-		"json3": "~3.2.4",
-		"modernizr": "~2.6.1",
-		"zynga-scroller": "https://raw.github.com/zynga/scroller/master/src/Scroller.js",
-		"zynga-scroller-animate": "https://raw.github.com/zynga/scroller/master/src/Animate.js",
-		"requirejs": "~2.1.4",
-		"requirejs-text": "~2.0.5"
-	}
+  "name": "rosy",
+  "version": "2.1.7",
+  "main": ["./config.js"],
+  "dependencies": {
+    "jquery": "jquery#1.8.1",
+    "json3": "~3.2.4",
+    "modernizr": "~2.6.1",
+    "requirejs": "~2.1.4",
+    "requirejs-text": "~2.0.5",
+    "handlebars.js": "~1.0.9",
+    "cookies": "https://raw.github.com/ScottHamper/Cookies/master/src/cookies.js"
+  },
+  "ignore" : []
 }

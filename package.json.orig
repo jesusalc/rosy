@@ -10,7 +10,11 @@
 		"rosy-oxblood": "https://github.com/rosy-components/rosy-oxblood/archive/1.0.0.tar.gz"
 	},
 	"scripts": {
+<<<<<<< HEAD
+		"install" : "bower install",
+=======
 		"install" : "bower install --dev",
+>>>>>>> potench/master
 		"browser": "bunyip -f test/runner.html local -l 'safari|chrome|firefox'",
 		"test": "npm test rosy-oxblood"
 	}
