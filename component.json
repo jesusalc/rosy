@@ -1,6 +1,6 @@
 {
 	"name": "rosy",
-	"version": "2.1.6",
+	"version": "bower-test",
 	"main": ["./config.js"],
 	"dependencies": {
 		"jquery": "jquery#~1.8.1",
