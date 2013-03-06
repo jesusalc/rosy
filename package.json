@@ -1,7 +1,7 @@
 {
 	"name": "rosy",
 	"description": "An inheritable AMD Framework.",
-	"version": "2.1.7",
+	"version": "1.0.0-bower",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ff0000/rosy.git"
