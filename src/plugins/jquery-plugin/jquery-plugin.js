@@ -7,8 +7,6 @@ define(
 
 	function (module, text) {
 
-		var prefix = "libs/plugins/jquery/jquery.";
-
 		return {
 
 			load: function (name, req, load, config) {
@@ -17,7 +15,7 @@ define(
 
 					if (!config.isBuild) {
 
-						req(["text!" + prefix + name + ".js"], function (val) {
+						req(["text!" + name + ".js"], function (val) {
 
 							var contents = "define('" + module.id + "!" + name  +
 							"', ['$'], function ($) {\nvar jQuery = $;\n" + val + ";\nreturn $;\n});\n";
@@ -39,7 +37,7 @@ define(
 
 			loadFromFileSystem : function (plugin, name) {
 				var fs = nodeRequire('fs');
-				var file = require.toUrl(prefix + name) + ".js";
+				var file = require.toUrl(name) + ".js";
 				var contents = fs.readFileSync(file).toString();
 
 				contents = "define('" + plugin + "!" + name  +
