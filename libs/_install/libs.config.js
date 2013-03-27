@@ -8,7 +8,7 @@ module.exports = {
 		"src" : "http://ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"
 	}, {
 		"name" : "Cookies.js",
-		"src" : "https://raw.github.com/ScottHamper/Cookies/master/cookies.js"
+		"src" : "https://raw.github.com/ScottHamper/Cookies/master/src/cookies.js"
 	}, {
 		"name" : "Handlebars",
 		"filename" : "handlebars.js",
