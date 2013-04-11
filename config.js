@@ -1,15 +1,16 @@
 require.config({
+	baseUrl : "../../",
 
 	paths : {
-		"$" : "../jquery/jquery",
-		"json" : "../json3/lib/json3",
-		"Cookies" : "../cookies/index",
-		"text" : "../requirejs-text/text",
-		"Handlebars" : "../handlebars.js/dist/handlebars",
+		"$" : "libs/jquery/jquery",
+		"json" : "libs/json3/lib/json3",
+		"Cookies" : "libs/cookies/index",
+		"text" : "libs/requirejs-text/text",
+		"Handlebars" : "libs/handlebars.js/dist/handlebars",
 		"templates" : "../../templates",
-		"rosy" : "src",
-		"jsonFile" : "src/plugins/json-file/jsonFile",
-		"$plugin" : "src/plugins/jquery-plugin/jquery-plugin"
+		"rosy" : "libs/rosy/src",
+		"jsonFile" : "libs/rosy/src/plugins/json-file/jsonFile",
+		"$plugin" : "libs/rosy/src/plugins/jquery-plugin/jquery-plugin"
 	},
 
 	waitSeconds : 15,
