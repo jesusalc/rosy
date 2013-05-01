@@ -154,7 +154,7 @@ define(
 			},
 
 			updateTitle : function (title) {
-
+				document.getElementsByTagName('title')[0].text = title;
 			},
 
 			/**
@@ -309,6 +309,11 @@ define(
 			},
 
 			__transitionOut : function (cb) {
+
+				if (this._inTimeout) { // clear the in timeout when raceCondition happens
+					clearTimeout(this._inTimeout);
+					this._inTimeout = null;
+				}
 
 				this._outTimeout = this.setTimeout(function () {
 					ERROR_HANDLER(new Error("View : transitionOutComplete() was never called."));

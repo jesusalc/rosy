@@ -18,28 +18,26 @@ define(
 			init : function (routes, config) {
 				this.sup.apply(this, arguments);
 
-				this._usePushState = config.usePushState && HISTORY_SUPPORTED;
+				this._usePushState = config && config.usePushState && HISTORY_SUPPORTED;
 
 				if (this._usePushState) {
-					window.addEventListener('popstate', this._onPopState);
+					window.addEventListener('popstate', this.update);
 				}
 			},
 
-			_onPopState : function () {
-				var url = location.pathname + location.search,
-					hash = location.hash.replace('#', '');
-				if (hash) {
-					url += '#' + hash;
-				}
-
-				this.route(url);
+			getUrl : function () {
+				return location.pathname + location.search;
 			},
 
-			onRoute : function (path) {
-				this.sup(path);
-				if (this._usePushState) {
+			update : function () {
+				this.route(this.getUrl());
+			},
+
+			onRoute : function (path, data) {
+				if (this._usePushState && this.getUrl() !== path) {
 					history.pushState(null, "", path);
 				}
+				this.sup(path, data);
 			}
 		});
 	}

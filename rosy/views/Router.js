@@ -48,13 +48,17 @@ define(
 			**********************/
 
 			hijack : function (container, selector, events) {
-				container.on(events, selector, this._onLinkClick);
+				$(container || "body").on(
+					events || "click",
+					selector || "[data-route], a[href^='/'], a[href^='#']",
+					this._onLinkClick
+				);
 			},
 
 			_onLinkClick : function (e) {
 				var dom = $(e.currentTarget),
 					data = dom.data(),
-					route = data.route || dom.attr("href");
+					route = data.route = (data.route || dom.attr("href"));
 
 				if (dom.attr("target")) {
 					return;
@@ -65,10 +69,12 @@ define(
 					return false;
 				}
 
-				if (route && this.route(route)) {
+				if (route && this.route(route, data)) {
 					e.preventDefault();
 					return false;
 				}
+				e.preventDefault();
+				return false;
 			},
 
 			/******************************
@@ -147,7 +153,7 @@ define(
 				Changing routes
 			**********************/
 
-			route : function (path) {
+			route : function (path, data) {
 				// don't route if none of the linked routers can be routed
 				var i;
 				if (!this.canRoute()) {
@@ -163,7 +169,7 @@ define(
 
 				if (this._newPath !== path) {
 					this._newPath = path;
-					this.onRoute(path);
+					this.onRoute(path, data);
 					for (i = 0; i < this._links.length; i++) {
 						this._links[i].route(path);
 					}
@@ -178,17 +184,15 @@ define(
 				return true;
 			},
 
-			onRoute : function (path) {
+			onRoute : function (path, data) {
 				var nextRoute = this.routeForPath(path);
 				if (!nextRoute) {
 					return;
 				}
 				this._route = nextRoute;
 				this.path = path;
-				this._lastView = this.view;
 				nextRoute.loadViewClass(this.proxy(function (View) {
-					this.view = new View(nextRoute.config, nextRoute.params(path));
-					this.transition();
+					this.shouldTransitionTo(View, nextRoute.config, nextRoute.params(path), data);
 					this.publish(ViewNotification.VIEW_CHANGED, {
 						view : this.view
 					});
@@ -223,91 +227,92 @@ define(
 				Transitions
 			**********************/
 
-			transition : function () {
-				var i,
-					sequence = transitionSequences[this._sequence];
+			shouldTransitionTo : function (View, config, params, data) {
+				if (this.view && this.view._moduleID === View._moduleID) {
+					this.view.__update(params, data);
+					return;
+				}
+				this._lastView = this.view;
+				this.view = new View(config, params, data);
+				this.view.__init(config, params, data);
+				this.transition(this.view, this._lastView, this._sequence);
+			},
 
-				this._queue = [];
+			transition : function (newView, oldView, type) {
+				var sequence = transitionSequences[type || 'sync'],
+					queue = [],
+					router = this,
+					i;
 
 				// add from end to beginning
 				for (i = 0; i < sequence.length; i++) {
-					this._queue.push(sequence[i]);
+					queue.push(sequence[i]);
 				}
 
-				this._nextInTransition();
-			},
-
-			_waitForCallback : function (cb, waitCount) {
-				var total = 0;
-				return function () {
-					total++;
-					if (total === waitCount) {
-						cb();
+				function waitForBoth(fn1, fn2, cb) {
+					var count = 0;
+					function done() {
+						count ++;
+						if (count === 2) {
+							cb();
+						}
 					}
-				};
-			},
-
-			_nextInTransition : function () {
-				// if we don't have a queue or are at the end of the queue, do nothing
-				if (this._queue.length === 0) {
-					return;
+					fn1(done);
+					fn2(done);
 				}
 
-				// get the next in the queue
-				var next = this._queue.shift(),
-					count, wait;
+				function next() {
+					var action, count, wait;
+					// if we don't have a queue or are at the end of the queue, do nothing
+					if (queue.length === 0) {
+						return;
+					}
 
-				//console.log('_nextInTransition', next);
+					action = queue.shift();
 
-				// handle the next action in the queue
-				switch (next) {
-				case "load":
-					if (this.view) {
-						this.view.__load(this._nextInTransition);
-					} else {
-						this._nextInTransition();
+					switch (action) {
+					case "load":
+						if (newView) {
+							newView.router = router;
+							newView.__load(next);
+						} else {
+							next();
+						}
+						break;
+					case "transitionInOut":
+					case "transitionOutIn":
+						count = 0;
+						if (oldView && newView) {
+							waitForBoth(oldView.__transitionOut, newView.__transitionIn, next);
+						} else if (oldView) {
+							oldView.__transitionOut(next);
+						} else if (newView) {
+							newView.__transitionIn(next);
+						}
+						break;
+					case "transitionIn":
+						if (newView) {
+							newView.__transitionIn(next);
+						}
+						break;
+					case "transitionOut":
+						if (oldView) {
+							oldView.__transitionOut(next);
+						} else {
+							next();
+						}
+						break;
+					case "cleanup":
+						if (oldView) {
+							oldView.__cleanup(next);
+						} else {
+							next();
+						}
+						break;
 					}
-					break;
-				case "transitionInOut":
-				case "transitionOutIn":
-					count = 0;
-					if (this._lastView) {
-						count++;
-					}
-					if (this.view) {
-						count++;
-					}
-					wait = this._waitForCallback(this._nextInTransition, count);
-					if (this.view) {
-						this.view.__transitionIn(wait);
-					}
-					if (this._lastView) {
-						this._lastView.__transitionOut(wait);
-					}
-					if (!this.view && !this._lastView) {
-						this._nextInTransition();
-					}
-					break;
-				case "transitionIn":
-					if (this.view) {
-						this.view.__transitionIn(this._nextInTransition);
-					}
-					break;
-				case "transitionOut":
-					if (this._lastView) {
-						this._lastView.__transitionOut(this._nextInTransition);
-					} else {
-						this._nextInTransition();
-					}
-					break;
-				case "cleanup":
-					if (this._lastView) {
-						this._lastView.__cleanup(this._nextInTransition);
-					} else {
-						this._nextInTransition();
-					}
-					break;
 				}
+
+				next();
 			}
 		});
 	}

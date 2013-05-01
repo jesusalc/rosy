@@ -29,9 +29,17 @@ define(
 				}
 			},
 
-			onRoute : function (path) {
-				this.sup(path);
+			onRoute : function (path, data) {
+				this.sup(path, data);
 				window.location.hash = this._lastHash = path;
+			},
+
+			close : function () {
+				window.location.hash = "";
+				this._lastHash = "";
+				this.sup();
+				this._newPath = null;
+				this._lastView = null;
 			}
 		});
 	}
